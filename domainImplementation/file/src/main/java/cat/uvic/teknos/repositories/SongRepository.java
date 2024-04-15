@@ -42,6 +42,9 @@ public class SongRepository implements com.esori.list.repositories.SongRepositor
             model.setId(newId);
             songs.put(newId, model);
         }else{
+            if(songs.get(model.getId())==null){
+                throw new RuntimeException("Song with id " + model.getId() + " not found");
+            }
             songs.put(model.getId(), model);
         }
         write();
@@ -52,6 +55,9 @@ public class SongRepository implements com.esori.list.repositories.SongRepositor
             var id = model.getId();
             songs.put(id, model);
         }else{
+            if(songs.get(model.getId())==null){
+                throw new RuntimeException("Song with id " + model.getId() + " not found");
+            }
             save(model);
         }
         write();

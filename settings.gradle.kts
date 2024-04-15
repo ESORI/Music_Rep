@@ -11,7 +11,8 @@ plugins {
 }
 
 rootProject.name = "music_rep"
-include("app", "domain", "utilities", "domainImplementation:file")
+include("app", "domain", "utilities", "domainImplementation:file","domainImplementation:src")
 findProject(":domainImplementation:file")?.name = "file"
-include("domainImplementation:jdbc")
-findProject(":domainImplementation:jdbc")?.name = "jdbc"
+findProject(":domainImplementation:src")?.name = "src"
+include("domainImplementation:src:main.java")
+findProject(":domainImplementation:src:main.java")?.name = "main.java"

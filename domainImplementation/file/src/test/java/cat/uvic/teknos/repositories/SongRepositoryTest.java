@@ -16,14 +16,6 @@ class SongRepositoryTest {
 
 
     @Test
-    void load() {
-    }
-
-    @Test
-    void write() {
-    }
-
-    @Test
     void save() {
         var dataPath = System.getProperty("user.dir") + "/src/main/resources/data/songs.ser";
 
@@ -61,7 +53,7 @@ class SongRepositoryTest {
     }
 
     @Test
-    void update() throws IOException {
+    void updateSong() throws IOException {
         var dataPath = System.getProperty("user.dir") + "/src/test/resources/data/updateSongs.ser";
         var testDataPath = System.getProperty("user.dir") + "/src/test/resources/data/testUpdateSongs.ser";
 
@@ -91,7 +83,7 @@ class SongRepositoryTest {
         song.setArtist(artist);
 
 
-        repository.save(song);
+        repository.update(song);
 
         var updatedSong = repository.get(1);
         assertEquals(1, updatedSong.getId());
@@ -107,11 +99,23 @@ class SongRepositoryTest {
     void updateSongThatDoesntExist() throws IOException {
         var dataPath = System.getProperty("user.dir") + "/src/test/resources/data/updateSongs.ser";
         var testDataPath = System.getProperty("user.dir") + "/src/test/resources/data/testUpdateSongs.ser";
-        int id = 3;
+        int id = 8;
 
         Files.copy(Path.of(dataPath), Path.of(testDataPath), StandardCopyOption.REPLACE_EXISTING);
 
+        var repository = new SongRepository(testDataPath);
+        var song = new Song();
+        song.setId(id);
+        song.setSongName("aaa");
 
+        var LP = new Artist();
+        LP.setId(1);
+        LP.setGroupName("Linkin Park");
+
+        song.setArtist(LP);
+// ELIMINAR UPDATE EN EL REPOSITORY ORIGINAL Y QUEDARSE CON SAVE ASECAS
+
+        assertThrows(RuntimeException.class, () -> repository.save(song));
 
     }
 
