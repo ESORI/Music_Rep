@@ -34,7 +34,7 @@ class SongRepositoryTest {
 
 
         var song = new Song();
-        song.setId(2);
+        //song.setId(1);
         song.setSongName("Breaking the habit");
         song.setDuration(196);
         song.setAlbum(album);
@@ -60,7 +60,7 @@ class SongRepositoryTest {
         Files.copy(Path.of(dataPath), Path.of(testDataPath), StandardCopyOption.REPLACE_EXISTING);
 
 
-        var repository = new SongRepository(dataPath);
+        var repository = new SongRepository(testDataPath);
 
 
         var artist = new Artist();
@@ -83,9 +83,10 @@ class SongRepositoryTest {
         song.setArtist(artist);
 
 
-        repository.update(song);
+        repository.save(song);
 
         var updatedSong = repository.get(1);
+
         assertEquals(1, updatedSong.getId());
 
         repository.load();
@@ -113,7 +114,6 @@ class SongRepositoryTest {
         LP.setGroupName("Linkin Park");
 
         song.setArtist(LP);
-// ELIMINAR UPDATE EN EL REPOSITORY ORIGINAL Y QUEDARSE CON SAVE ASECAS
 
         assertThrows(RuntimeException.class, () -> repository.save(song));
 
@@ -129,18 +129,22 @@ class SongRepositoryTest {
 
         var repository = new SongRepository(dataPath);
 
-        var song = new Song();
+
+        Song song = new Song();
         song.setId(1);
+        song.setSongName("prova1");
+        song.setDuration(196);
+
 
         repository.save(song);
 
-        var deletedSong = repository.get(1);
-        assertEquals(1, deletedSong.getId());
 
-        repository.load();
+        var updatedSong = repository.get(1);
 
-        var deletedSongFromFile = repository.get(1);
-        assertEquals(1, deletedSongFromFile.getId());
+        assertNull(updatedSong);
+
+        repository.delete(song);
+        assertNull(song);
 
     }
 

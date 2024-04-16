@@ -15,6 +15,8 @@ public class SongRepository implements com.esori.list.repositories.SongRepositor
 
     public SongRepository(String dataPath) {
         this.dataPath = dataPath;
+
+        load();
     }
 
     void load() {
@@ -42,22 +44,17 @@ public class SongRepository implements com.esori.list.repositories.SongRepositor
             model.setId(newId);
             songs.put(newId, model);
         }else{
-            if(songs.get(model.getId())==null){
-                throw new RuntimeException("Song with id " + model.getId() + " not found");
-            }
-            songs.put(model.getId(), model);
+
+            update(model);
         }
         write();
     }
-    @Override
-    public void update(Song model) {
+    private void update(Song model) {
         if(model.getId() > 0){
             var id = model.getId();
             songs.put(id, model);
         }else{
-            if(songs.get(model.getId())==null){
-                throw new RuntimeException("Song with id " + model.getId() + " not found");
-            }
+
             save(model);
         }
         write();

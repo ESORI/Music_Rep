@@ -14,6 +14,7 @@ public class AlbumRepository implements com.esori.list.repositories.AlbumReposit
 
     public AlbumRepository(String dataPath) {
         this.dataPath = dataPath;
+        load();
     }
 
     void load() {
@@ -51,16 +52,7 @@ public class AlbumRepository implements com.esori.list.repositories.AlbumReposit
         albums.remove(model.getId());
     }
 
-    @Override
-    public void update(Album model) {
-        if(model.getId() > 0){
-            var id = model.getId();
-            albums.put(id, model);
-        }else{
-            save(model);
-        }
-        write();
-    }
+
 
     @Override
     public Album get(Integer id) {

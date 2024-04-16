@@ -9,7 +9,6 @@ public interface ArtistRepository extends Repository<Integer, Artist>{
     @Override
     void save(Artist model);
 
-    void update(Artist model);
     @Override
     void delete(Artist model);
 

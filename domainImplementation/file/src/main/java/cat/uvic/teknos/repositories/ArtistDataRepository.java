@@ -15,6 +15,7 @@ public class ArtistDataRepository implements com.esori.list.repositories.ArtistD
 
     public ArtistDataRepository(String dataPath) {
         this.dataPath = dataPath;
+        load();
     }
 
     void load() {
@@ -46,16 +47,7 @@ public class ArtistDataRepository implements com.esori.list.repositories.ArtistD
         }
         write();
     }
-    @Override
-    public void update(ArtistData model) {
-        if(model.getId() > 0){
-            var id = model.getId();
-            artistsData.put(id, model);
-        }else{
-            save(model);
-        }
-        write();
-    }
+
     @Override
     public void delete(ArtistData model) {
         artistsData.remove(model.getId());

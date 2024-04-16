@@ -15,6 +15,7 @@ public class PlaylistRepository implements com.esori.list.repositories.PlaylistR
 
     public PlaylistRepository(String dataPath) {
         this.dataPath = dataPath;
+        load();
     }
 
     void load() {
@@ -46,16 +47,7 @@ public class PlaylistRepository implements com.esori.list.repositories.PlaylistR
         }
         write();
     }
-    @Override
-    public void update(Playlist model) {
-        if(model.getId() > 0){
-            var id = model.getId();
-            playlists.put(id, model);
-        }else{
-            save(model);
-        }
-        write();
-    }
+
     @Override
     public void delete(Playlist model) {
         playlists.remove(model.getId());

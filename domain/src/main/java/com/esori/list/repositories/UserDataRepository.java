@@ -9,7 +9,6 @@ public interface UserDataRepository extends Repository<Integer, UserData>{
     @Override
     void save(UserData model);
 
-    void update(UserData model);
     @Override
     void delete(UserData model);
 

@@ -8,7 +8,6 @@ public interface AlbumRepository extends Repository<Integer, Album> {
     @Override
     void save(Album model);
 
-    void update(Album model);
 
     @Override
     void delete(Album model);

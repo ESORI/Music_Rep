@@ -10,7 +10,6 @@ public interface ArtistDataRepository extends Repository<Integer, ArtistData>{
     @Override
     void save(ArtistData model);
 
-    void update(ArtistData model);
     @Override
     void delete(ArtistData model);
 

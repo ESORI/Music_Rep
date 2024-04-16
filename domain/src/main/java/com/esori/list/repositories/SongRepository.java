@@ -9,7 +9,6 @@ public interface SongRepository extends Repository<Integer, Song>{
     @Override
     void save(Song model);
 
-    void update(Song model);
     @Override
     void delete(Song model);
 

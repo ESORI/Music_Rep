@@ -9,7 +9,6 @@ public interface PlaylistRepository extends Repository<Integer, Playlist>{
     @Override
     void save(Playlist model);
 
-    void update(Playlist model);
     @Override
     void delete(Playlist model);
 

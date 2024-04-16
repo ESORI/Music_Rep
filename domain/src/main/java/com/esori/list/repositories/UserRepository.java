@@ -9,7 +9,6 @@ public interface UserRepository extends Repository<Integer, User>{
     @Override
     void save(User model);
 
-    void update(User model);
     @Override
     void delete(User model);
 

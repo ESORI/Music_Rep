@@ -15,6 +15,7 @@ public class UserDataRepository implements com.esori.list.repositories.UserDataR
 
     public UserDataRepository(String dataPath) {
         this.dataPath = dataPath;
+        load();
     }
 
     void load() {
@@ -46,16 +47,7 @@ public class UserDataRepository implements com.esori.list.repositories.UserDataR
         }
         write();
     }
-    @Override
-    public void update(UserData model) {
-        if(model.getId() > 0){
-            var id = model.getId();
-            usersData.put(id, model);
-        }else{
-            save(model);
-        }
-        write();
-    }
+
     @Override
     public void delete(UserData model) {
         usersData.remove(model.getId());

@@ -15,6 +15,7 @@ public class UserRepository implements com.esori.list.repositories.UserRepositor
 
     public UserRepository(String dataPath) {
         this.dataPath = dataPath;
+        load();
     }
 
     void load() {
@@ -42,20 +43,14 @@ public class UserRepository implements com.esori.list.repositories.UserRepositor
             model.setId(newId);
             users.put(newId, model);
         }else{
+            if (users.get(model.getId()) == null) {
+                throw new RuntimeException("User with id " + model.getId() + " not found");
+            }
             users.put(model.getId(), model);
         }
         write();
     }
-    @Override
-    public void update(User model) {
-        if(model.getId() > 0){
-            var id = model.getId();
-            users.put(id, model);
-        }else{
-            save(model);
-        }
-        write();
-    }
+
 
     @Override
     public void delete(User model) {
