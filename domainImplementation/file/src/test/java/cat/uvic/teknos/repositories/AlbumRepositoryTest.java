@@ -2,7 +2,6 @@ package cat.uvic.teknos.repositories;
 
 import cat.uvic.teknos.models.Album;
 import cat.uvic.teknos.models.Artist;
-import cat.uvic.teknos.models.ArtistData;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;

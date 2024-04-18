@@ -1,7 +1,6 @@
 package cat.uvic.teknos.repositories;
 
 import com.esori.list.models.Artist;
-import com.esori.list.models.ArtistData;
 
 import java.io.*;
 import java.util.HashMap;

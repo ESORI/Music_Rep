@@ -1,7 +1,6 @@
 package cat.uvic.teknos.repositories;
 
 import cat.uvic.teknos.models.Playlist;
-import cat.uvic.teknos.models.Song;
 import cat.uvic.teknos.models.User;
 import org.junit.jupiter.api.Test;
 

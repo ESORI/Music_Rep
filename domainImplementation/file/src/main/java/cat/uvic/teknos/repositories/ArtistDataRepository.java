@@ -1,6 +1,5 @@
 package cat.uvic.teknos.repositories;
 
-import com.esori.list.models.Album;
 import com.esori.list.models.ArtistData;
 
 import java.io.*;

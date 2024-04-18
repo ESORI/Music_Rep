@@ -1,7 +1,6 @@
 package cat.uvic.teknos.repositories;
 
-import cat.uvic.teknos.models.Playlist;
-import cat.uvic.teknos.models.User;
+
 import cat.uvic.teknos.models.UserData;
 import org.junit.jupiter.api.Test;
 
@@ -9,7 +8,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.*;
 
