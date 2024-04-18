@@ -40,7 +40,7 @@ public class UserData implements com.esori.list.models.UserData, Serializable {
 
     @Override
     public void setUserName(String name) {
-        this.userName=userName;
+        this.userName=name;
     }
 
     @Override
@@ -65,11 +65,11 @@ public class UserData implements com.esori.list.models.UserData, Serializable {
 
     @Override
     public int getAge() {
-        return 0;
+        return age;
     }
 
     @Override
     public void setAge(int age) {
-
+        this.age = age;
     }
 }

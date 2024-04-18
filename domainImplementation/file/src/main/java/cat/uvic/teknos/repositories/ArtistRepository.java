@@ -19,10 +19,13 @@ public class ArtistRepository implements com.esori.list.repositories.ArtistRepos
     }
 
     void load() {
-        try (var inputStream = new ObjectInputStream(new FileInputStream(dataPath))) {
-            artists = (Map<Integer, Artist>) inputStream.readObject();
-        } catch (ClassNotFoundException | IOException e) {
-            throw new RuntimeException(e);
+        var file = new File(dataPath);
+        if(file.exists()) {
+            try (var inputStream = new ObjectInputStream(new FileInputStream(dataPath))) {
+                artists = (Map<Integer, Artist>) inputStream.readObject();
+            } catch (ClassNotFoundException | IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
     void write(){
@@ -50,6 +53,7 @@ public class ArtistRepository implements com.esori.list.repositories.ArtistRepos
     @Override
     public void delete(Artist model) {
         artists.remove(model.getId());
+        write();
     }
 
     @Override

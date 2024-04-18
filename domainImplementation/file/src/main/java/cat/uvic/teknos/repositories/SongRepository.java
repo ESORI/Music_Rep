@@ -21,10 +21,13 @@ public class SongRepository implements com.esori.list.repositories.SongRepositor
     }
 
     void load() {
-        try (var inputStream = new ObjectInputStream(new FileInputStream(dataPath))) {
-            songs = (Map<Integer, Song>) inputStream.readObject();
-        } catch (ClassNotFoundException | IOException e) {
-            throw new RuntimeException(e);
+        var file = new File(dataPath);
+        if(file.exists()) {
+            try (var inputStream = new ObjectInputStream(new FileInputStream(dataPath))) {
+                songs = (Map<Integer, Song>) inputStream.readObject();
+            } catch (ClassNotFoundException | IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
     void write(){
@@ -56,6 +59,7 @@ public class SongRepository implements com.esori.list.repositories.SongRepositor
     @Override
     public void delete(Song model) {
         songs.remove(model.getId());
+        write();
     }
 
     @Override

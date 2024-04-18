@@ -19,10 +19,13 @@ public class PlaylistRepository implements com.esori.list.repositories.PlaylistR
     }
 
     void load() {
-        try (var inputStream = new ObjectInputStream(new FileInputStream(dataPath))) {
-            playlists = (Map<Integer, Playlist>) inputStream.readObject();
-        } catch (ClassNotFoundException | IOException e) {
-            throw new RuntimeException(e);
+        var file = new File(dataPath);
+        if(file.exists()) {
+            try (var inputStream = new ObjectInputStream(new FileInputStream(dataPath))) {
+                playlists = (Map<Integer, Playlist>) inputStream.readObject();
+            } catch (ClassNotFoundException | IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
     void write(){
@@ -51,6 +54,7 @@ public class PlaylistRepository implements com.esori.list.repositories.PlaylistR
     @Override
     public void delete(Playlist model) {
         playlists.remove(model.getId());
+        write();
     }
 
     @Override

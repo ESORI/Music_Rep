@@ -45,6 +45,7 @@ class JdbcSongRepositoryTest {
 
     @Test
     void shouldDelete() throws SQLException {
+
         try(var connection = DriverManager.getConnection("jdbc:mysql://localhost/music_rep", "root", null)){
             Song song = new Song();
             song.setId(7);
@@ -75,6 +76,5 @@ class JdbcSongRepositoryTest {
     @Test
     void getAll() {
     }
-
- */
+*/
 }

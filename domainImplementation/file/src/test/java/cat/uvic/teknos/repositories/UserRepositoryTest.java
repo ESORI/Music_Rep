@@ -21,6 +21,7 @@ class UserRepositoryTest {
 
         var repository = new UserRepository(dataPath);
 
+        //Create and save new user with some of its attributes
         var playlist = new Playlist();
         playlist.setId(1);
         playlist.setPlaylistName("Sleepy time");
@@ -35,6 +36,7 @@ class UserRepositoryTest {
 
         repository.save(user);
 
+        //check if the values exist after creating and adding it to the repository
         assertTrue(user.getId()>0);
         assertNotNull(repository.get(user.getId()));
         assertNotNull(repository.get(user.getId()).getUsername());
@@ -53,6 +55,7 @@ class UserRepositoryTest {
 
         var repository = new UserRepository(testDataPath);
 
+        //since we're updating we create a user over an already existing id and follow the same steps as save()
         var playlist = new Playlist();
         playlist.setId(1);
         playlist.setPlaylistName("Sleepy time");
@@ -91,11 +94,13 @@ class UserRepositoryTest {
         var repository = new UserRepository(testDataPath);
 
 
+        //Following the same logic as the previous test, we write over a user that doesn't exist (that id does not belong to anyone)
         var user = new User();
         user.setId(id);
         user.setUsername("user222");
 
 
+        //Since we did a throw new Exception in the repository the moment an id is not found when updating, we do an assertThrows for the method
         assertThrows(RuntimeException.class, () -> repository.save(user));
         }
 
@@ -110,6 +115,7 @@ class UserRepositoryTest {
 
         var user = new User();
         user.setId(1);
+        user.setUsername("u222");
 
         //Finds user and proceeds to erase (write as null) every attribute
 
@@ -119,7 +125,7 @@ class UserRepositoryTest {
         repository.delete(user);
 
         assertNull(repository.get(1));
-        //repository.load();
+
     }
 
     @Test
@@ -131,7 +137,6 @@ class UserRepositoryTest {
         var user = new User();
         user.setUsername("us123");
         repository.save(user);
-
 
         assertNotNull(repository.get(user.getId()));
 
@@ -161,7 +166,7 @@ class UserRepositoryTest {
         user3.setUsername("us789");
         repository.save(user3);
 
-
+        repository.getAll();
         assertEquals(3, repository.getAll().size());
 
     }
@@ -176,6 +181,8 @@ class UserRepositoryTest {
         user.setUsername("user1999");
         repository.save(user);
 
+
         assertNotNull(repository.getByUsername(user.getUsername()));
+        repository.getByUsername(user.getUsername());
     }
 }

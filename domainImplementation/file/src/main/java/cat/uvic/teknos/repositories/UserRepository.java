@@ -19,10 +19,13 @@ public class UserRepository implements com.esori.list.repositories.UserRepositor
     }
 
     void load() {
-        try (var inputStream = new ObjectInputStream(new FileInputStream(dataPath))) {
-            users = (Map<Integer, User>) inputStream.readObject();
-        } catch (ClassNotFoundException | IOException e) {
-            throw new RuntimeException(e);
+        var file = new File(dataPath);
+        if(file.exists()) {
+            try (var inputStream = new ObjectInputStream(new FileInputStream(dataPath))) {
+                users = (Map<Integer, User>) inputStream.readObject();
+            } catch (ClassNotFoundException | IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
     void write(){
