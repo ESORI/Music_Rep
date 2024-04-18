@@ -47,8 +47,7 @@ public class JdbcSongRepository implements SongRepository {
         }
     }
 
-    @Override
-    public void update(Song model) {
+    private void update(Song model) {
         try(PreparedStatement statement = connection.prepareStatement("UPDATE SONG SET SONG_NAME= ? WHERE ID_SONG = ?")){
             statement.setString(1, model.getSongName());
             statement.setInt(2,model.getId());

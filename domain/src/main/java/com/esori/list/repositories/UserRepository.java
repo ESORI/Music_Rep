@@ -17,4 +17,7 @@ public interface UserRepository extends Repository<Integer, User>{
 
     @Override
     Set<User> getAll();
+
+    User getByUsername (String username);
+
 }

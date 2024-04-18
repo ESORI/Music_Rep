@@ -55,6 +55,7 @@ public class UserRepository implements com.esori.list.repositories.UserRepositor
     @Override
     public void delete(User model) {
         users.remove(model.getId());
+        write();
     }
 
     @Override
@@ -65,5 +66,10 @@ public class UserRepository implements com.esori.list.repositories.UserRepositor
     @Override
     public Set<User> getAll() {
         return Set.copyOf(users.values());
+    }
+
+    @Override
+    public User getByUsername(String username) {
+        return users.values().stream().filter(user -> user.getUsername().equals(username)).findFirst().orElse(null);
     }
 }

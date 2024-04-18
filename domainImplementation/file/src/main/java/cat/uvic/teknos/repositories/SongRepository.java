@@ -2,6 +2,7 @@ package cat.uvic.teknos.repositories;
 
 import com.esori.list.models.Playlist;
 import com.esori.list.models.Song;
+import com.esori.list.models.User;
 
 import java.io.*;
 import java.util.HashMap;
@@ -44,21 +45,14 @@ public class SongRepository implements com.esori.list.repositories.SongRepositor
             model.setId(newId);
             songs.put(newId, model);
         }else{
-
-            update(model);
+            if (songs.get(model.getId()) == null) {
+                throw new RuntimeException("User with id " + model.getId() + " not found");
+            }
+            songs.put(model.getId(), model);
         }
         write();
     }
-    private void update(Song model) {
-        if(model.getId() > 0){
-            var id = model.getId();
-            songs.put(id, model);
-        }else{
 
-            save(model);
-        }
-        write();
-    }
     @Override
     public void delete(Song model) {
         songs.remove(model.getId());

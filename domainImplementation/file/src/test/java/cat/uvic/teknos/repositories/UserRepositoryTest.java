@@ -8,12 +8,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.HashMap;
 import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserRepositoryTest {
+
 
     @Test
     void save() {
@@ -37,6 +37,7 @@ class UserRepositoryTest {
 
         assertTrue(user.getId()>0);
         assertNotNull(repository.get(user.getId()));
+        assertNotNull(repository.get(user.getId()).getUsername());
 
         repository.load();
         assertNotNull(repository.get(user.getId()));
@@ -99,14 +100,82 @@ class UserRepositoryTest {
         }
 
     @Test
-    void delete() {
+    void delete() throws IOException {
+        var dataPath = System.getProperty("user.dir") + "/src/test/resources/data/usersDelete.ser";
+        var testDataPath = System.getProperty("user.dir") + "/src/test/resources/data/testUsersDelete.ser";
+
+        Files.copy(Path.of(dataPath), Path.of(testDataPath), StandardCopyOption.REPLACE_EXISTING);
+
+        var repository = new UserRepository(testDataPath);
+
+        var user = new User();
+        user.setId(1);
+
+        //Finds user and proceeds to erase (write as null) every attribute
+
+        repository.save(user);
+        assertNotNull(repository.get(1));
+
+        repository.delete(user);
+
+        assertNull(repository.get(1));
+        //repository.load();
     }
 
     @Test
     void get() {
+        var dataPath = System.getProperty("user.dir") + "/src/test/resources/data/usersGet.ser";
+
+        var repository = new UserRepository(dataPath);
+
+        var user = new User();
+        user.setUsername("us123");
+        repository.save(user);
+
+
+        assertNotNull(repository.get(user.getId()));
+
     }
 
     @Test
     void getAll() {
+        var dataPath = System.getProperty("user.dir") + "/src/test/resources/data/usersGetAll.ser";
+
+        var repository = new UserRepository(dataPath);
+
+
+        //Since we're assertEquals later equal to the number of users we're adding currently, it would only
+        //run errors since it would be searching for the users added now along with the ones we added before
+        //Meaning we have to delete the repository first so no (size) error pops up
+        repository.getAll().forEach(repository::delete);
+
+        var user = new User();
+        user.setUsername("us123");
+        repository.save(user);
+
+        var user2 = new User();
+        user2.setUsername("us456");
+        repository.save(user2);
+
+        var user3 = new User();
+        user3.setUsername("us789");
+        repository.save(user3);
+
+
+        assertEquals(3, repository.getAll().size());
+
+    }
+
+    @Test
+    void getByUsername(){
+        var dataPath = System.getProperty("user.dir") + "/src/test/resources/data/usersGetByUsername.ser";
+
+        var repository = new UserRepository(dataPath);
+
+        var user = new User();
+        user.setUsername("user1999");
+        repository.save(user);
+
+        assertNotNull(repository.getByUsername(user.getUsername()));
     }
 }
