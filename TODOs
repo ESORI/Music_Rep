@@ -1,0 +1,9 @@
+# TODOs
+### TODO1
+Remove all non aggregate repositories (e.g. ArtistData).
+
+Artist should have a property called data of type ArtistData
+
+### TODO2
+
+Avoid name shortcuts like nSongs, don't let others guess the meaning
