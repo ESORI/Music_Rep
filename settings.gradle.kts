@@ -16,3 +16,5 @@ findProject(":domainImplementation:file")?.name = "file"
 findProject(":domainImplementation:src")?.name = "src"
 include("domainImplementation:src:main.java")
 findProject(":domainImplementation:src:main.java")?.name = "main.java"
+include("domainImplementation:jdbc")
+findProject(":domainImplementation:jdbc")?.name = "jdbc"

@@ -1,6 +1,7 @@
 package cat.uvic.teknos.models;
 
 import com.esori.list.models.Album;
+import com.esori.list.models.ArtistData;
 
 import java.io.Serializable;
 import java.util.Set;
@@ -11,6 +12,7 @@ public class Artist implements com.esori.list.models.Artist, Serializable {
     private String groupName;
     private int monthlyList;
     private Set<Album> album;
+    private ArtistData artistData;
 
     @Override
     public int getId() {
@@ -50,5 +52,15 @@ public class Artist implements com.esori.list.models.Artist, Serializable {
     @Override
     public void setAlbum(Set<Album> album) {
         this.album=album;
+    }
+
+    @Override
+    public ArtistData getArtistData() {
+        return artistData;
+    }
+
+    @Override
+    public void setArtistData(ArtistData artistData) {
+        this.artistData = artistData;
     }
 }

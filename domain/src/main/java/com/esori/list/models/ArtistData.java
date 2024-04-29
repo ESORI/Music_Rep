@@ -5,8 +5,6 @@ public interface ArtistData {
     int getId();
     void setId(int id);
 
-    Artist getArtist();
-    void setArtist(Artist artist);
 
     String getCountry();
     void setCountry(String country);

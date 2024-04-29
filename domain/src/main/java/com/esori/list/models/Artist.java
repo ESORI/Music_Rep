@@ -15,4 +15,7 @@ public interface Artist {
     Set<Album> getAlbum();
     void setAlbum(Set<Album> album);
 
+    ArtistData getArtistData();
+    void setArtistData(ArtistData artistData);
+
 }
