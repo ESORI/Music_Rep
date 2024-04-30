@@ -12,7 +12,7 @@ import java.util.Set;
 public class JdbcSongRepository implements SongRepository {
 
     private static final String INSERT_SONG = "INSERT INTO SONG (ID_ALBUM, ID_ARTIST, SONG_NAME, DURATION) VALUES (?,?,?,?)";
-    //private static final String INSERT_ALBUM = "INSERT INTO ALBUM (ID_ARTIST, ALBUM_NAME, N_SONG) VALUES (?,?,?)";
+
     private final Connection connection;
 
     public JdbcSongRepository(Connection connection){
@@ -29,8 +29,7 @@ public class JdbcSongRepository implements SongRepository {
     }
 
     private void insert(Song model) {
-        try(var statement = connection.prepareStatement(INSERT_SONG,Statement.RETURN_GENERATED_KEYS)/*;
-            var albumSong = connection.prepareStatement(INSERT_ALBUM)*/){
+        try(var statement = connection.prepareStatement(INSERT_SONG,Statement.RETURN_GENERATED_KEYS)){
             statement.setInt(1,1);
             statement.setInt(2,1);
             statement.setString(3, model.getSongName());
@@ -45,11 +44,7 @@ public class JdbcSongRepository implements SongRepository {
             if(keys.next()){
                 model.setId(keys.getInt(1));
             }
-/*
-            albumSong.setInt(1, model.getId());
-            albumSong.setString(2, model.getAlbum().getAlbumName());
-            albumSong.setInt(3,model.getAlbum().getNSongs());
-*/
+
             connection.commit();
 
         } catch (SQLException e) {
@@ -92,12 +87,10 @@ public class JdbcSongRepository implements SongRepository {
 
     @Override
     public void delete(Song model) {
-        try(PreparedStatement statement = connection.prepareStatement("DELETE FROM SONG WHERE ID_SONG = ?")/*;
-            PreparedStatement albumStatement = connection.prepareStatement("DELETE FROM ALBUM WHERE ID = ?")*/){
+        try(PreparedStatement statement = connection.prepareStatement("DELETE FROM SONG WHERE ID_SONG = ?")){
             connection.setAutoCommit(false);
 
             statement.setInt(1,model.getId());
-            //albumStatement.setInt(1, model.getAlbum().getId());
 
             statement.executeUpdate();
 
@@ -113,11 +106,9 @@ public class JdbcSongRepository implements SongRepository {
 
     @Override
     public Song get(Integer id) {
-        //String data = "";
-        //Song song = new cat.uvic.teknos.musicrep.domain.jdbc.models.Song();
 
-        try(PreparedStatement statement = connection.prepareStatement("SELECT * FROM SONG WHERE ID_SONG = ?");
-            PreparedStatement albumStatement = connection.prepareStatement("SELECT * FROM ALBUM WHERE ID = ?")){
+
+        try(PreparedStatement statement = connection.prepareStatement("SELECT * FROM SONG WHERE ID_SONG = ?")){
             Song song = null;
             statement.setInt(1,id);
 

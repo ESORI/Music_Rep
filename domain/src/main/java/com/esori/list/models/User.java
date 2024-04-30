@@ -11,4 +11,7 @@ public interface User {
 
     Set<Playlist> getPlaylist();
     void setPlaylist(Set<Playlist> playlist);
+
+    UserData getUserData();
+    void setUserData(UserData userData);
 }

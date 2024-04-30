@@ -2,6 +2,8 @@ package teknos.musicplayer.backoffice;
 
 import com.esori.list.models.ModelFactory;
 import com.esori.list.repositories.UserRepository;
+import de.vandermeer.asciitable.AsciiTable;
+import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
 
 import java.io.BufferedReader;
 import java.io.PrintStream;
@@ -23,6 +25,8 @@ public class UsersManager {
 
     public void start(){
         out.println("Users: ");
+        out.println("Type:");
+        out.println("1 to insert a new User");
 
         var command = "";
         do{
@@ -30,16 +34,47 @@ public class UsersManager {
 
             switch (command){
                 case"1" -> insert();
-                //case"2" -> update();
+                case"2" -> update();
+                case"5" -> getAll();
             }
 
         }while(!command.equals("exit"));
         out.println("Bye!");
     }
 
+    private void getAll() {
+        var asciiTable = new AsciiTable();
+        asciiTable.addRule();
+        asciiTable.addRow("Id", "Username");
+        asciiTable.addRule();
+
+        for(var user : userRepository.getAll()){
+            asciiTable.addRow(user.getId(), user.getUsername());
+            asciiTable.addRule();
+        }
+
+        asciiTable.setTextAlignment(TextAlignment.CENTER);
+        String render = asciiTable.render();
+        System.out.println(render);
+    }
+
+    private void update() {
+        var user = modelFactory.createUser();
+        userRepository.save(user);
+    }
+
     private void insert() {
         var user = modelFactory.createUser();
-        userRepository.save(null);
+
+        out.println("Username: ");
+        user.setUsername(readLine(in));
+
+        //out.println("User name:");
+        //user.setUserData();
+
+        userRepository.save(user);
+
+        out.println("Insert user succesfully: "+ user);
     }
 }
 

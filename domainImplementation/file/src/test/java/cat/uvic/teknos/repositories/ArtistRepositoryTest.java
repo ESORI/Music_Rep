@@ -1,6 +1,7 @@
 package cat.uvic.teknos.repositories;
 
 import cat.uvic.teknos.models.Artist;
+import cat.uvic.teknos.models.ArtistData;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -11,7 +12,6 @@ import java.nio.file.StandardCopyOption;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ArtistRepositoryTest {
-    /*
 
     @Test
     void save() {
@@ -19,9 +19,14 @@ class ArtistRepositoryTest {
 
         var repository = new ArtistRepository(dataPath);
 
+        var artistData = new ArtistData();
+        artistData.setLang("EN");
+        artistData.setDebutYear(1996);
+
         var artist = new Artist();
         artist.setGroupName("Linkin Park");
         artist.setMonthlyList(150000);
+        artist.setArtistData(artistData);
 
         repository.save(artist);
 
@@ -116,5 +121,4 @@ class ArtistRepositoryTest {
         assertEquals(3, repository.getAll().size());
     }
 
-     */
 }

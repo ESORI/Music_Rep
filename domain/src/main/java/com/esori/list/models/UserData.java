@@ -5,8 +5,7 @@ public interface UserData {
     int getId();
     void setId(int id);
 
-    User getUser();
-    void setUser(User user);
+
 
     String getUserName();
     void setUserName(String name);

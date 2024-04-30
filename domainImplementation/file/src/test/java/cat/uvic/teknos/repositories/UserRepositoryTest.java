@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class UserRepositoryTest {
 
 
+
     @Test
     void save() {
         var dataPath = System.getProperty("user.dir") + "/src/main/resources/data/users.ser";
@@ -185,4 +186,5 @@ class UserRepositoryTest {
         assertNotNull(repository.getByUsername(user.getUsername()));
         repository.getByUsername(user.getUsername());
     }
+
 }

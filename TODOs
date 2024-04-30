@@ -7,3 +7,9 @@ Artist should have a property called data of type ArtistData
 ### TODO2
 
 Avoid name shortcuts like nSongs, don't let others guess the meaning
+
+
+
+
+//Notes
+Fix tests due to changes to Artist, ArtistData, User, UserData

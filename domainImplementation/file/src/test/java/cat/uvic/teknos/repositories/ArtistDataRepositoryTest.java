@@ -12,7 +12,7 @@ import java.nio.file.StandardCopyOption;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ArtistDataRepositoryTest {
-    /*
+
 
     @Test
     void save() {
@@ -20,14 +20,9 @@ class ArtistDataRepositoryTest {
 
         var repository = new ArtistDataRepository(dataPath);
 
-        var artist = new Artist();
-        artist.setId(1);
-        artist.setGroupName("Linkin Park");
-
         var artistData = new ArtistData();
         artistData.setLang("EN");
         artistData.setDebutYear(1996);
-        artistData.setArtist(artist);
 
         repository.save(artistData);
 
@@ -49,15 +44,10 @@ class ArtistDataRepositoryTest {
 
         var repository = new ArtistDataRepository(testDataPath);
 
-        var artist = new Artist();
-        artist.setId(1);
-        artist.setGroupName("Depresión Sonora");
-
         var artistData = new ArtistData();
         artistData.setId(1);
         artistData.setLang("ES");
         artistData.setDebutYear(2006);
-        artistData.setArtist(artist);
 
         repository.save(artistData);
 
@@ -130,5 +120,5 @@ class ArtistDataRepositoryTest {
         assertEquals(2, repository.getAll().size());
     }
 
-     */
+
 }
