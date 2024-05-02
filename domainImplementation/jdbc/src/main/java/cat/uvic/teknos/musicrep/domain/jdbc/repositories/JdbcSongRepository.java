@@ -9,6 +9,7 @@ import java.sql.*;
 import java.util.HashSet;
 import java.util.Set;
 
+//REPOSITORY WILL HANDLE ARTIST, ALBUM AND SONG, THE FIRST TWO WON'T BE NECESSARY SINCE THEY'RE ALREADY BEING HANDLED BY THIS ONE
 public class JdbcSongRepository implements SongRepository {
 
     private static final String INSERT_SONG = "INSERT INTO SONG (ID_ALBUM, ID_ARTIST, SONG_NAME, DURATION) VALUES (?,?,?,?)";
@@ -27,7 +28,7 @@ public class JdbcSongRepository implements SongRepository {
             update(model);
         }
     }
-
+//CHANGE GET ID BY INT FOR A SELECT ID FROM X WHERE NAME = (?)
     private void insert(Song model) {
         try(var statement = connection.prepareStatement(INSERT_SONG,Statement.RETURN_GENERATED_KEYS)){
             statement.setInt(1,1);
@@ -110,12 +111,14 @@ public class JdbcSongRepository implements SongRepository {
 
         try(PreparedStatement statement = connection.prepareStatement("SELECT * FROM SONG WHERE ID_SONG = ?")){
             Song song = null;
+            Album album = null;
             statement.setInt(1,id);
-
             var resultSet = statement.executeQuery();
             if(resultSet.next()){
                 song = new cat.uvic.teknos.musicrep.domain.jdbc.models.Song();
                 song.setId(resultSet.getInt("ID_SONG"));
+                //album.setId(resultSet.getInt("ID_ALBUM"));
+                //song.setAlbum();
                 //song.setAlbum(albumStatement.setInt(resultSet.getInt("ID_ALBUM")));
                 //song.setArtist((Artist) resultSet.getObject("ID_ARTIST"));
                 song.setSongName(resultSet.getString("SONG_NAME"));

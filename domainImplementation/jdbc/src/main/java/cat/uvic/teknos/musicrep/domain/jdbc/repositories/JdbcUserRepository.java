@@ -6,6 +6,8 @@ import com.esori.list.repositories.UserRepository;
 import java.sql.Connection;
 import java.util.Set;
 
+
+//THIS REPOSITORY WILL HANDLE USER AND USERDATA
 public class JdbcUserRepository implements UserRepository {
 
     private final Connection connection;

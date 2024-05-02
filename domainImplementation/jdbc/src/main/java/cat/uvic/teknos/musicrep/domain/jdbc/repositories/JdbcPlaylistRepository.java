@@ -6,6 +6,9 @@ import com.esori.list.repositories.PlaylistRepository;
 import java.sql.Connection;
 import java.util.Set;
 
+
+//THIS REPOSITORY WILL HANDLE PLAYLIST, PLAYLIST_USER AND PLAYLIST_SONG
+
 public class JdbcPlaylistRepository implements PlaylistRepository {
 
     private final Connection connection;
