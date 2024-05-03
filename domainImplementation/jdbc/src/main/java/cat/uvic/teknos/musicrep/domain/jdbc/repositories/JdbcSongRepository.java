@@ -10,9 +10,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 //REPOSITORY WILL HANDLE ARTIST, ALBUM AND SONG, THE FIRST TWO WON'T BE NECESSARY SINCE THEY'RE ALREADY BEING HANDLED BY THIS ONE
+
 public class JdbcSongRepository implements SongRepository {
 
-    private static final String INSERT_SONG = "INSERT INTO SONG (ID_ALBUM, ID_ARTIST, SONG_NAME, DURATION) VALUES (?,?,?,?)";
+    private static final String INSERT_SONG = "INSERT INTO SONG (ID_ALBUM, ID_ARTIST, SONG_NAME, DURATION) VALUES (?,?,?,?) " +
+            "ON DUPLICATE KEY UPDATE";
 
     private final Connection connection;
 
@@ -28,6 +30,7 @@ public class JdbcSongRepository implements SongRepository {
             update(model);
         }
     }
+    //https://stackoverflow.com/questions/5930812/insert-into-mysql-database-if-records-already-exists-then-update
 //CHANGE GET ID BY INT FOR A SELECT ID FROM X WHERE NAME = (?)
     private void insert(Song model) {
         try(var statement = connection.prepareStatement(INSERT_SONG,Statement.RETURN_GENERATED_KEYS)){

@@ -26,6 +26,7 @@
             <option value="$PROJECT_DIR$/domainImplementation" />
             <option value="$PROJECT_DIR$/domainImplementation/file" />
             <option value="$PROJECT_DIR$/domainImplementation/jdbc" />
+            <option value="$PROJECT_DIR$/domainImplementation/jpa" />
             <option value="$PROJECT_DIR$/domainImplementation/src" />
             <option value="$PROJECT_DIR$/domainImplementation/src/main.java" />
             <option value="$PROJECT_DIR$/utilities" />

@@ -7,7 +7,7 @@ import java.sql.Connection;
 import java.util.Set;
 
 
-//THIS REPOSITORY WILL HANDLE PLAYLIST, PLAYLIST_USER AND PLAYLIST_SONG
+//THIS REPOSITORY WILL HANDLE PLAYLIST
 
 public class JdbcPlaylistRepository implements PlaylistRepository {
 
