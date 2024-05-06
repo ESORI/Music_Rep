@@ -8,8 +8,8 @@ import com.esori.list.repositories.SongRepository;
 import java.sql.*;
 import java.util.HashSet;
 import java.util.Set;
-
-//REPOSITORY WILL HANDLE ARTIST, ALBUM AND SONG, THE FIRST TWO WON'T BE NECESSARY SINCE THEY'RE ALREADY BEING HANDLED BY THIS ONE
+/*
+//REPOSITORY WILL HANDLE SONG
 
 public class JdbcSongRepository implements SongRepository {
 
@@ -150,3 +150,4 @@ public class JdbcSongRepository implements SongRepository {
         return null;
     }
 }
+*/

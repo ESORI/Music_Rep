@@ -1,4 +1,4 @@
-package cat.uvic.teknos.musicrep.domain.jpa;
+package cat.uvic.teknos.musicrep.domain.jpa.models;
 
 import com.esori.list.models.Song;
 import com.esori.list.models.User;
