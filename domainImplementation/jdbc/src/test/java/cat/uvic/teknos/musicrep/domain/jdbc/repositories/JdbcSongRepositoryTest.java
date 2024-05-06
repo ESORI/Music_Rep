@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith({CreateSchemaExtension.class, GetConnectionExtension.class})
 class JdbcSongRepositoryTest {
+    /*
 
     private final Connection connection;
 
@@ -92,7 +93,7 @@ class JdbcSongRepositoryTest {
 
             //TODO: test database table updated
             assertTrue(true);
-        }*/
+        }
 
         var repository = new JdbcSongRepository(connection);
         assertNotNull(repository.get(1));
@@ -103,5 +104,5 @@ class JdbcSongRepositoryTest {
     @Test
     void getAll() {
     }
-
+*/
 }

@@ -6,7 +6,6 @@ import com.esori.list.models.User;
 public class UserData implements com.esori.list.models.UserData {
 
     private int id;
-    private User user;
     private String userName;
     private int phoneNumber;
     private String country;
@@ -20,16 +19,6 @@ public class UserData implements com.esori.list.models.UserData {
     @Override
     public void setId(int id) {
         this.id=id;
-    }
-
-    @Override
-    public User getUser() {
-        return user;
-    }
-
-    @Override
-    public void setUser(User user) {
-        this.user=user;
     }
 
     @Override

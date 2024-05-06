@@ -6,7 +6,7 @@ import com.esori.list.models.Song;
 import com.esori.list.models.User;
 import com.esori.list.models.*;
 
-public class JdbcModelFactory implements ModelFactory {
+public class JpaModelFactory implements ModelFactory {
 
 
 

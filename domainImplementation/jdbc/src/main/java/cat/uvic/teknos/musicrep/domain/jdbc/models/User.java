@@ -1,6 +1,7 @@
 package cat.uvic.teknos.musicrep.domain.jdbc.models;
 
 import com.esori.list.models.Playlist;
+import com.esori.list.models.UserData;
 
 import java.util.Set;
 
@@ -9,6 +10,7 @@ public class User implements com.esori.list.models.User {
     private int id;
     private String username;
     private Set<Playlist> playlist;
+    private UserData userData;
 
     @Override
     public int getId() {
@@ -38,5 +40,15 @@ public class User implements com.esori.list.models.User {
     @Override
     public void setPlaylist(Set<Playlist> playlist) {
         this.playlist=playlist;
+    }
+
+    @Override
+    public UserData getUserData() {
+        return userData;
+    }
+
+    @Override
+    public void setUserData(UserData userData) {
+        this.userData =userData;
     }
 }
