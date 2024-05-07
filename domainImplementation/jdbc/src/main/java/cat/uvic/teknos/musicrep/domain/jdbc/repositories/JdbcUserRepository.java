@@ -54,7 +54,7 @@ public class JdbcUserRepository implements UserRepository {
                 userDataStatement.setInt(3,model.getUserData().getPhoneNumber());
                 userDataStatement.setString(4,model.getUserData().getCountry());
                 userDataStatement.setInt(5,model.getUserData().getAge());
-
+                userDataStatement.executeUpdate();
             }
             connection.commit();
         } catch (SQLException e) {

@@ -16,7 +16,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith({CreateSchemaExtension.class, GetConnectionExtension.class})
 class JdbcUserRepositoryTest {
 
-
     private final Connection connection;
 
     public JdbcUserRepositoryTest(Connection connection){

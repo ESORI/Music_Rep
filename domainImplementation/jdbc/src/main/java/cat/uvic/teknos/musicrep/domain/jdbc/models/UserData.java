@@ -28,7 +28,7 @@ public class UserData implements com.esori.list.models.UserData {
 
     @Override
     public void setUserName(String name) {
-        this.userName=userName;
+        this.userName=name;
     }
 
     @Override

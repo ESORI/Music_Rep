@@ -15,9 +15,9 @@ import java.util.Set;
 //will try to do this one with a (ON DUPLICATED KEY) when inserting, that way there will be no need to make an update method
 public class JdbcArtistRepository implements ArtistRepository {
 
-    private static final String INSERT_ARTIST = "INSERT INTO ARTIST (GROUP_NAME, MONTHLY_LIST) VALUES (?,?) ON DUPLICATE KEY UPDATE";
-    private static final String INSERT_ALBUM = "INSERT INTO ALBUM (ID_ARTIST, ALBUM_NAME, N_SONGS) VALUES (?,?,?) ON DUPLICATE KEY UPDATE";
-    private static final String INSERT_SONG = "INSERT INTO SONG (ID_ARTIST, ID_ALBUM, SONG_NAME, DURATION) VALUES (?,?,?,?) ON DUPLICATE KEY UPDATE";
+    private static final String INSERT_ARTIST = "INSERT INTO ARTIST (GROUP_NAME, MONTHLY_LIST) VALUES (?,?)";
+    private static final String INSERT_ALBUM = "INSERT INTO ALBUM (ID_ARTIST, ALBUM_NAME, QUANTITY_SONGS) VALUES (?,?,?)";
+    private static final String INSERT_SONG = "INSERT INTO SONG (ID_ARTIST, ID_ALBUM, SONG_NAME, DURATION) VALUES (?,?,?,?)";
     private final Connection connection;
 
     public JdbcArtistRepository(Connection connection){
@@ -30,10 +30,13 @@ public class JdbcArtistRepository implements ArtistRepository {
         try(var statement = connection.prepareStatement(INSERT_ARTIST,Statement.RETURN_GENERATED_KEYS);
             var albumStatement = connection.prepareStatement(INSERT_ALBUM, Statement.RETURN_GENERATED_KEYS);
             var songStatement = connection.prepareStatement(INSERT_SONG, Statement.RETURN_GENERATED_KEYS);){
-            statement.setString(1,model.getGroupName());
-            statement.setInt(2,model.getMonthlyList());
+
 
             connection.setAutoCommit(false);
+
+
+            statement.setString(1,model.getGroupName());
+            statement.setInt(2,model.getMonthlyList());
 
             statement.executeUpdate();
 
@@ -43,26 +46,34 @@ public class JdbcArtistRepository implements ArtistRepository {
             }
 
             if(model.getAlbum()!=null){
+                System.out.println("ALBUM DETECTED");
                 for(var album : model.getAlbum()){
                     albumStatement.setInt(1, model.getId());
                     albumStatement.setString(2, album.getAlbumName());
                     albumStatement.setInt(3, album.getNSongs());
+                    albumStatement.executeUpdate();
                     //testing
-                    var keysAlbum = statement.getGeneratedKeys();
+                    var keysAlbum = albumStatement.getGeneratedKeys();
                     if(keysAlbum.next()){
                         model.setId(keysAlbum.getInt(1));
                     }
+                    /*
                     if(album.getSong()!=null){
                         for(var song:album.getSong()){
                             songStatement.setInt(1, model.getId());
                             songStatement.setInt(2, album.getId());
                             songStatement.setString(3, song.getSongName());
-                            songStatement.setInt(3, song.getDuration());
+                            songStatement.setInt(4, song.getDuration());
+                            songStatement.executeUpdate();
+                            var keySong = songStatement.getGeneratedKeys();
+                            if(keysAlbum.next()){
+                                model.setId(keySong.getInt(1));
+                            }
                         }
-                    }
+                    }*/
                 }
             }
-            //statement.executeUpdate();
+
 
             connection.commit();
 
