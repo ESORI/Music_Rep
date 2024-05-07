@@ -13,6 +13,7 @@ public class CreateSchemaExtension implements BeforeAllCallback, ExtensionContex
     private static final Lock lock = new ReentrantLock();
     private static volatile boolean started = false;
 
+    // private EntityManagerFactory entityManagerFactory;
 
     @Override
     public void beforeAll(final ExtensionContext context) throws Exception {

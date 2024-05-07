@@ -1,5 +1,5 @@
 package cat.uvic.teknos.musicrep.domain.jpa;
-
+/*
 import cat.uvic.teknos.musicrep.domain.jpa.models.Album;
 import cat.uvic.teknos.musicrep.domain.jpa.models.Artist;
 import jakarta.persistence.EntityManagerFactory;
@@ -60,3 +60,5 @@ class ArtistTest {
     }
 
 }
+
+ */

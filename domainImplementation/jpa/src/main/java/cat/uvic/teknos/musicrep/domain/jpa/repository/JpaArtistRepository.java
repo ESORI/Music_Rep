@@ -1,5 +1,5 @@
 package cat.uvic.teknos.musicrep.domain.jpa.repository;
-
+/*
 import com.esori.list.models.Artist;
 import com.esori.list.repositories.ArtistRepository;
 import jakarta.persistence.EntityManagerFactory;
@@ -34,3 +34,5 @@ public class JpaArtistRepository implements ArtistRepository {
         return null;
     }
 }
+
+ */

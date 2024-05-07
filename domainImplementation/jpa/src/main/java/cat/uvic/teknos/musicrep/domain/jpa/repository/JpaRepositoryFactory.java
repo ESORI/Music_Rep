@@ -1,5 +1,5 @@
 package cat.uvic.teknos.musicrep.domain.jpa.repository;
-
+/*
 import com.esori.list.repositories.*;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
@@ -31,3 +31,5 @@ public class JpaRepositoryFactory implements RepositoryFactory {
         return null;
     }
 }
+
+ */

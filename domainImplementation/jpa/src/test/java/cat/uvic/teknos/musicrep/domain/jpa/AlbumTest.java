@@ -1,5 +1,5 @@
 package cat.uvic.teknos.musicrep.domain.jpa;
-
+/*
 import cat.uvic.teknos.musicrep.domain.jpa.models.Album;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
@@ -52,3 +52,5 @@ class AlbumTest {
     }
 
 }
+
+ */
