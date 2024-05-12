@@ -5,6 +5,7 @@ import com.esori.list.models.Artist;
 import com.esori.list.models.Playlist;
 import jakarta.persistence.*;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -22,8 +23,8 @@ public class Song implements com.esori.list.models.Song {
     private Artist artist;
     @Transient
     private Album album;
-    @Transient
-    private Set<Playlist> playlist;
+    @ManyToMany(mappedBy = "SONGS")
+    private Set<Playlist> playlist = new HashSet<Playlist>();
 
     @Override
     public int getId() {

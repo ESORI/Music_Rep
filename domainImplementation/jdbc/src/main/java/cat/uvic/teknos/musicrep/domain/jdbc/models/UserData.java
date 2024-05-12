@@ -53,11 +53,11 @@ public class UserData implements com.esori.list.models.UserData {
 
     @Override
     public int getAge() {
-        return 0;
+        return age;
     }
 
     @Override
     public void setAge(int age) {
-
+        this.age = age;
     }
 }

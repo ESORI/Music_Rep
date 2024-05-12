@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.sql.Connection;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -52,20 +53,103 @@ class JdbcUserRepositoryTest {
     }
 
     @Test
+    void shouldUpdateUser(){
+
+        //updates all
+        User user = new User();
+        user.setId(3);
+        user.setUsername("kylXr");
+
+        UserData userData = new UserData();
+        userData.setId(user.getId());
+        userData.setUserName("Javier");
+
+        user.setUserData(userData);
+
+        //updates just user
+
+        User user1 = new User();
+        user1.setId(1);
+        user1.setUsername("AsomBroso");
+
+        //updates just userData -> user name
+        User user2 = new User();
+        user2.setId(2);
+
+        UserData userData1 = new UserData();
+        userData1.setId(user2.getId());
+        userData1.setUserName("Erika");
+
+        user2.setUserData(userData1);
+
+        var repository = new JdbcUserRepository(connection);
+        repository.save(user);
+        repository.save(user1);
+        repository.save(user2);
+    }
+
+    @Test
     void delete() {
+        User user = new User();
+        user.setId(1);
+
+        var repository = new JdbcUserRepository(connection);
+        repository.delete(user);
+
+        DbAssertions.assertThat(connection)
+                .table("USER")
+                .where("ID_USER", user.getId())
+                .doesNotExist();
     }
 
     @Test
     void get() {
+        int id = 3;
+        var repository = new JdbcUserRepository(connection);
+        assertNotNull(repository.get(id));
+
+        com.esori.list.models.User user = repository.get(id);
+        SoutUser(user);
+
     }
+
+
 
     @Test
     void getAll() {
+        var repository = new JdbcUserRepository(connection);
+
+        Set<com.esori.list.models.User> users = repository.getAll();
+        assertNotNull(users);
+
+        for(var user:users){
+            SoutUser(user);
+        }
+
     }
 
     @Test
     void getByUsername() {
+        String id = "Bombis";
+        var repository = new JdbcUserRepository(connection);
+        assertNotNull(repository.getByUsername(id));
+
+        com.esori.list.models.User user = repository.getByUsername(id);
+        SoutUser(user);
     }
 
-
+    private static void SoutUser(com.esori.list.models.User user) {
+        System.out.println("User with id: " + user.getId());
+        System.out.println("Username:" +  user.getUsername());
+        if(user.getUserData()!=null){
+            System.out.println("-----\nData from User");
+            System.out.println("Name: " + user.getUserData().getUserName());
+            System.out.println("Phone number: " + user.getUserData().getPhoneNumber());
+            System.out.println("Country: " + user.getUserData().getCountry());
+            System.out.println("Age: " + user.getUserData().getAge());
+        }else{
+            System.out.println("-----\nData from User not available");
+        }
+        System.out.println("\n\n");
+    }
 }

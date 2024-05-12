@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 
 import java.util.HashSet;
 import java.util.Set;
-/*
+
 @Entity
 @Table(name="ARTIST")
 public class Artist implements com.esori.list.models.Artist {
@@ -21,12 +21,13 @@ public class Artist implements com.esori.list.models.Artist {
     private int monthlyList;
 
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "ARTIST")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, targetEntity = cat.uvic.teknos.musicrep.domain.jpa.models.Album.class)
     @JoinColumn(name = "ALBUM")
-    private Set<cat.uvic.teknos.musicrep.domain.jpa.models.Album> albums = new HashSet<cat.uvic.teknos.musicrep.domain.jpa.models.Album>();
+    private Set<Album> album;
+
     @JoinColumn(name = "ARTIST DATA")
-    @OneToOne
-    private cat.uvic.teknos.musicrep.domain.jpa.models.ArtistData artistData;
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, targetEntity = cat.uvic.teknos.musicrep.domain.jpa.models.ArtistData.class)
+    private ArtistData artistData;
 
     @Override
     public int getId() {
@@ -65,7 +66,7 @@ public class Artist implements com.esori.list.models.Artist {
 
     @Override
     public void setAlbum(Set<Album> album) {
-        //this.album=album;
+        this.album=album;
     }
 
     @Override
@@ -79,4 +80,4 @@ public class Artist implements com.esori.list.models.Artist {
     }
 
 
-}*/
+}

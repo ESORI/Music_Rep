@@ -1,10 +1,6 @@
 package cat.uvic.teknos.musicrep.domain.jdbc.repositories;
 
-import cat.uvic.teknos.musicrep.domain.jdbc.models.UserData;
-import com.esori.list.models.Album;
-import com.esori.list.models.Artist;
-import com.esori.list.models.Song;
-import com.esori.list.models.User;
+import com.esori.list.models.*;
 import com.esori.list.repositories.ArtistRepository;
 
 import java.sql.*;
@@ -17,7 +13,8 @@ public class JdbcArtistRepository implements ArtistRepository {
 
     private static final String INSERT_ARTIST = "INSERT INTO ARTIST (GROUP_NAME, MONTHLY_LIST) VALUES (?,?)";
     private static final String INSERT_ALBUM = "INSERT INTO ALBUM (ID_ARTIST, ALBUM_NAME, QUANTITY_SONGS) VALUES (?,?,?)";
-    private static final String INSERT_SONG = "INSERT INTO SONG (ID_ARTIST, ID_ALBUM, SONG_NAME, DURATION) VALUES (?,?,?,?)";
+    private static final String INSERT_SONG = "INSERT INTO SONG (ID_ALBUM, ID_ARTIST, SONG_NAME, DURATION) VALUES (?,?,?,?)";
+    private static final String INSERT_ARTIST_DATA = "INSERT INTO ARTIST_DATA (ID_ARTIST, COUNTRY, LANG, DEBUT_YEAR) VALUES (?,?,?,?)";
     private final Connection connection;
 
     public JdbcArtistRepository(Connection connection){
@@ -25,18 +22,58 @@ public class JdbcArtistRepository implements ArtistRepository {
     }
 
 
+    //SAVES FOR EVERY TABLE: ARTIST, ARTIST DATA, ALBUM AND SONG
     @Override
     public void save(Artist model) {
+        if(model.getId()<=0){
+            insert(model);
+        }else{
+            update(model);
+        }
+    }
+
+    private void saveArtistData(ArtistData model, int id){
+        if(model.getId()<=0){
+            insertArtistData(model, id);
+        }else{
+            updateArtistData(model,id);
+        }
+    }
+
+
+    private void saveAlbum(Album model, int id){
+        if(model.getId()<=0){
+            insertAlbum(model, id);
+        }else{
+            updateAlbum(model,id);
+        }
+    }
+
+
+    private void saveSong(Song model, int idArtist, int idAlbum){
+        if(model.getId()<=0){
+            insertSong(model, idArtist, idAlbum);
+        }else{
+            updateSong(model, idAlbum);
+        }
+    }
+
+
+
+    //INSERT AND UPDATE FOR ARTIST
+
+    private void insert(Artist model) {
         try(var statement = connection.prepareStatement(INSERT_ARTIST,Statement.RETURN_GENERATED_KEYS);
             var albumStatement = connection.prepareStatement(INSERT_ALBUM, Statement.RETURN_GENERATED_KEYS);
-            var songStatement = connection.prepareStatement(INSERT_SONG, Statement.RETURN_GENERATED_KEYS);){
+            var songStatement = connection.prepareStatement(INSERT_SONG, Statement.RETURN_GENERATED_KEYS)
+            ){
 
 
             connection.setAutoCommit(false);
 
 
-            statement.setString(1,model.getGroupName());
-            statement.setInt(2,model.getMonthlyList());
+            statement.setString(1, model.getGroupName());
+            statement.setInt(2, model.getMonthlyList());
 
             statement.executeUpdate();
 
@@ -45,32 +82,18 @@ public class JdbcArtistRepository implements ArtistRepository {
                 model.setId(keys.getInt(1));
             }
 
+            //INSERT TO OTHER TABLES
+            int id = model.getId();
+
+            //INSERT TO ARTIST DATA
+            if(model.getArtistData()!=null){
+                saveArtistData(model.getArtistData(), id);
+            }
+
+            //INSERT TO ALBUM AND SONG
             if(model.getAlbum()!=null){
-                System.out.println("ALBUM DETECTED");
                 for(var album : model.getAlbum()){
-                    albumStatement.setInt(1, model.getId());
-                    albumStatement.setString(2, album.getAlbumName());
-                    albumStatement.setInt(3, album.getNSongs());
-                    albumStatement.executeUpdate();
-                    //testing
-                    var keysAlbum = albumStatement.getGeneratedKeys();
-                    if(keysAlbum.next()){
-                        model.setId(keysAlbum.getInt(1));
-                    }
-                    /*
-                    if(album.getSong()!=null){
-                        for(var song:album.getSong()){
-                            songStatement.setInt(1, model.getId());
-                            songStatement.setInt(2, album.getId());
-                            songStatement.setString(3, song.getSongName());
-                            songStatement.setInt(4, song.getDuration());
-                            songStatement.executeUpdate();
-                            var keySong = songStatement.getGeneratedKeys();
-                            if(keysAlbum.next()){
-                                model.setId(keySong.getInt(1));
-                            }
-                        }
-                    }*/
+                    saveAlbum(album, id);
                 }
             }
 
@@ -85,21 +108,176 @@ public class JdbcArtistRepository implements ArtistRepository {
         }
     }
 
-    //Consider changing altering the tables in a way that if we Delete Artist, every other table will delete on cascade
-    //MISSING DELETE FROM PLAYLIST, PLAYLIST USER AND PLAYLIST SONG TT
+    private void update(Artist model){
+        try(
+                var preparedStatement = connection.prepareStatement("UPDATE ARTIST SET GROUP_NAME = ? WHERE ID_ARTIST = ?");
+                ) {
+            connection.setAutoCommit(false);
+
+            var id = model.getId();
+
+            if(model.getGroupName()!=null){
+                preparedStatement.setString(1, model.getGroupName());
+                preparedStatement.setInt(2, id);
+                preparedStatement.executeUpdate();
+            }
+
+            if(model.getArtistData()!=null){
+                saveArtistData(model.getArtistData(), id);
+            }
+
+            if(model.getAlbum()!=null){
+
+                for(var album:model.getAlbum()){
+                    saveAlbum(album, id);
+                }
+
+
+            }
+
+            connection.commit();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    //INSERT AND UPDATE FOR ARTIST DATA
+
+    private void insertArtistData(ArtistData model, int id) {
+        try(
+                var artistDataStatement = connection.prepareStatement(INSERT_ARTIST_DATA)
+                ) {
+            artistDataStatement.setInt(1, id);
+            artistDataStatement.setString(2, model.getCountry());
+            artistDataStatement.setString(3, model.getLang());
+            artistDataStatement.setInt(4, model.getDebutYear());
+            artistDataStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    private void updateArtistData(ArtistData model, int id) {
+        try(
+                var statement = connection.prepareStatement("UPDATE ARTIST_DATA SET COUNTRY = ? WHERE ID_ARTIST = ?")
+                ){
+            statement.setString(1, model.getCountry());
+            statement.setInt(2, id);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    //INSERT AND UPDATE FOR ALBUM
+
+    private void insertAlbum(Album model, int id) {
+        try(
+                var statement = connection.prepareStatement(INSERT_ALBUM, Statement.RETURN_GENERATED_KEYS)
+                ) {
+            statement.setInt(1, id);
+            statement.setString(2, model.getAlbumName());
+            statement.setInt(3, model.getNSongs());
+            statement.executeUpdate();
+            //testing
+            var keysAlbum = statement.getGeneratedKeys();
+            if(keysAlbum.next()){
+                model.setId(keysAlbum.getInt(1));
+            }
+
+            if(model.getSong()!=null){
+                for(var song:model.getSong()){
+
+                    saveSong(song,id,model.getId());
+
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void updateAlbum(Album model, int id) {
+        try(
+                var statement = connection.prepareStatement("UPDATE ALBUM SET ALBUM_NAME = ? WHERE ID_ARTIST = ? AND ID_ALBUM = ?");
+
+                ) {
+            int idAlbum = model.getId();
+            statement.setString(1, model.getAlbumName());
+            statement.setInt(2, id);
+            statement.setInt(3, idAlbum);
+            statement.executeUpdate();
+
+            if(model.getSong()!=null){
+                for(var song:model.getSong()){
+                    saveSong(song, id, idAlbum);
+                }
+            }
+
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    //INSERT AND UPDTE FOR SONG
+
+    private void insertSong(Song model, int idArtist, int idAlbum) {
+        try(
+                var statement = connection.prepareStatement(INSERT_SONG, Statement.RETURN_GENERATED_KEYS)
+                ) {
+            statement.setInt(1, idAlbum);
+            statement.setInt(2, idArtist);
+            statement.setString(3, model.getSongName());
+            statement.setInt(4, model.getDuration());
+            statement.executeUpdate();
+            var keySong = statement.getGeneratedKeys();
+            if(keySong.next()){
+                model.setId(keySong.getInt(1));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void updateSong(Song model, int id) {
+        try(
+                var statement = connection.prepareStatement("UPDATE SONG SET SONG_NAME = ?, DURATION = ? WHERE ID_ALBUM = ? AND ID_SONG = ?")
+                ) {
+            int idSong = model.getId();
+            statement.setString(1, model.getSongName());
+            statement.setInt(2, model.getDuration());
+            statement.setInt(3, id);
+            statement.setInt(4, idSong);
+            statement.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+
     @Override
     public void delete(Artist model) {
         try(PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM ARTIST where ID_ARTIST = ?");
-            PreparedStatement albumStatement = connection.prepareStatement("DELETE FROM ALBUM where ID_ARTIST = ?");
-            PreparedStatement songStatement = connection.prepareStatement("DELETE FROM SONG WHERE ID_ARTIST = ?")) {
+            //PreparedStatement albumStatement = connection.prepareStatement("DELETE FROM ALBUM where ID_ARTIST = ?");
+            //PreparedStatement songStatement = connection.prepareStatement("DELETE FROM SONG WHERE ID_ARTIST = ?")
+        ) {
 
             connection.setAutoCommit(false);
 
             preparedStatement.setInt(1,model.getId());
+            /*
             albumStatement.setInt(1,model.getId());
             songStatement.setInt(1,model.getId());
 
             songStatement.executeUpdate();
+            */
+
 
             preparedStatement.executeUpdate();
             connection.commit();
@@ -117,40 +295,30 @@ public class JdbcArtistRepository implements ArtistRepository {
         String query = "SELECT * FROM ARTIST WHERE ID_ARTIST = ?";
         String query2 = "SELECT * FROM ALBUM WHERE ID_ARTIST = ?";
         String query3 = "SELECT * FROM SONG WHERE ID_ARTIST = ?";
+        String query4 = "SELECT * FROM ARTIST_DATA WHERE ID_ARTIST =?";
 
         try (PreparedStatement statement = connection.prepareStatement(query);
         PreparedStatement albumStatement = connection.prepareStatement(query2);
-        PreparedStatement songStatement = connection.prepareStatement(query3)) {
+        PreparedStatement songStatement = connection.prepareStatement(query3);
+        PreparedStatement artistDataStatment = connection.prepareStatement(query4)
+        ) {
             statement.setInt(1, id);
+            albumStatement.setInt(1, id);
+            songStatement.setInt(1, id);
+            artistDataStatment.setInt(1, id);
 
-            try (ResultSet resultSet = statement.executeQuery()) {
+            try (var resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
                     Artist result = new cat.uvic.teknos.musicrep.domain.jdbc.models.Artist();
                     result.setId(resultSet.getInt("ID_ARTIST"));
                     result.setGroupName(resultSet.getString("GROUP_NAME"));
                     result.setMonthlyList(resultSet.getInt("MONTHLY_LIST"));
 
-                    var albums = new HashSet<Album>();
-                    //If we find any albums, we start checking and saving them
-                    try(ResultSet albumResultSet = albumStatement.executeQuery()){
-                        while(albumResultSet.next()){
-                            Album album = new cat.uvic.teknos.musicrep.domain.jdbc.models.Album();
-                            album.setAlbumName(resultSet.getString("ALBUM_NAME"));
-                            album.setNSongs(resultSet.getInt("N_SONGS"));
-                            //If we find any songs inside the albums, we check and save them
-                            try(ResultSet songResultSet = songStatement.executeQuery()){
-                                while(songResultSet.next()){
-                                    Song song = new cat.uvic.teknos.musicrep.domain.jdbc.models.Song();
-                                    song.setSongName(resultSet.getString("SONG_NAME"));
-                                    song.setDuration(resultSet.getInt("DURATION"));
-                                    album.getSong().add(song);
-                                }
-                            }
+                    var resultSetData = artistDataStatment.executeQuery();
 
-                            albums.add(album);
-                        }
-                    }
-                    result.setAlbum(albums);
+                    getArtistData(resultSetData, result);
+
+                    getAlbumAndSong(albumStatement, songStatement, result);
 
                     return result;
                 }
@@ -162,23 +330,91 @@ public class JdbcArtistRepository implements ArtistRepository {
         return null;
     }
 
+
     //check getAll
     @Override
     public Set<Artist> getAll() {
-        try(PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM USER")) {
-            ResultSet resultSet = preparedStatement.executeQuery();
-            Set<Artist> artists = new HashSet<>();
-            while (resultSet.next()) {
-                Artist artist = new cat.uvic.teknos.musicrep.domain.jdbc.models.Artist();
-                artist.setId(resultSet.getInt("ID_ARTIST"));
-                artist.setGroupName(resultSet.getString("GROUP_NAME"));
-                artists.add(artist);
+        String query = "SELECT * FROM ARTIST";
+        String query2 = "SELECT * FROM ALBUM WHERE ID_ARTIST = ?";
+        String query3 = "SELECT * FROM SONG WHERE ID_ARTIST = ?";
+        String query4 = "SELECT * FROM ARTIST_DATA";
+
+        try (PreparedStatement statement = connection.prepareStatement(query);
+             PreparedStatement albumStatement = connection.prepareStatement(query2);
+             PreparedStatement songStatement = connection.prepareStatement(query3);
+             PreparedStatement artistDataStatment = connection.prepareStatement(query4)
+        ) {
+
+            int id = 1;
+            try (var resultSet = statement.executeQuery()) {
+                var artists = new HashSet<Artist>();
+                var resultSetData = artistDataStatment.executeQuery();
+
+
+                while (resultSet.next()) {
+
+                    //There is some trouble when printing albums and song to their respective artists
+                    //So program will handle these two this way for now
+                    albumStatement.setInt(1, id);
+                    songStatement.setInt(1, id);
+                    id++;
+
+
+                    Artist result = new cat.uvic.teknos.musicrep.domain.jdbc.models.Artist();
+                    result.setId(resultSet.getInt("ID_ARTIST"));
+                    result.setGroupName(resultSet.getString("GROUP_NAME"));
+                    result.setMonthlyList(resultSet.getInt("MONTHLY_LIST"));
+
+
+
+                    getArtistData(resultSetData, result);
+
+                    getAlbumAndSong(albumStatement, songStatement, result);
+
+                    artists.add(result);
+
+                }
+                return artists;
             }
-            return artists;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
+
+    private static void getAlbumAndSong(PreparedStatement albumStatement, PreparedStatement songStatement, Artist result) throws SQLException {
+        var albums = new HashSet<Album>();
+        var resultSetAlbum = albumStatement.executeQuery();
+        while(resultSetAlbum.next()){
+            Album resultAlbum = new cat.uvic.teknos.musicrep.domain.jdbc.models.Album();
+            resultAlbum.setAlbumName(resultSetAlbum.getString("ALBUM_NAME"));
+            resultAlbum.setNSongs(resultSetAlbum.getInt("QUANTITY_SONGS"));
+
+            var songs = new HashSet<Song>();
+            var resultSetSong = songStatement.executeQuery();
+            while(resultSetSong.next()){
+                Song resultSong = new cat.uvic.teknos.musicrep.domain.jdbc.models.Song();
+                resultSong.setSongName(resultSetSong.getString("SONG_NAME"));
+                resultSong.setDuration(resultSetSong.getInt("DURATION"));
+                songs.add(resultSong);
+                resultAlbum.setSong(songs);
+            }
+
+            albums.add(resultAlbum);
+            result.setAlbum(albums);
+        }
+    }
+
+    private static void getArtistData(ResultSet resultSetData, Artist result) throws SQLException {
+        if(resultSetData.next()){
+            ArtistData resultData = new cat.uvic.teknos.musicrep.domain.jdbc.models.ArtistData();
+            resultData.setCountry(resultSetData.getString("COUNTRY"));
+            resultData.setLang(resultSetData.getString("LANG"));
+            resultData.setDebutYear(resultSetData.getInt("DEBUT_YEAR"));
+
+            result.setArtistData(resultData);
+        }
+    }
+
     private void setAutoCommitTrue() {
         try {
             connection.setAutoCommit(true);

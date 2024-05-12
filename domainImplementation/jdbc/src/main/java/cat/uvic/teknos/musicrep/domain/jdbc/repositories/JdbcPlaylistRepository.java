@@ -4,6 +4,8 @@ import com.esori.list.models.Playlist;
 import com.esori.list.repositories.PlaylistRepository;
 
 import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Set;
 
 
@@ -12,9 +14,9 @@ import java.util.Set;
 
 public class JdbcPlaylistRepository implements PlaylistRepository {
 
-    private static final String INSERT_PLAYLIST = "INSERT INTO PLAYLIST (QUANTITY_SONGS, PLAYLIST_NAME,DESCRIPTION,DURATION) VALUES (?,?,?,?) ON DUPLICATE KEY UPDATE";
-    private static final String INSERT_PLAYLIST_USER = "INSERT INTO PLAYLIST_USER (ID_PLAYLIST, ID_USER) VALUES (?,?) ON DUPLICATE KEY UPDATE";
-    private static final String INSERT_PLAYLIST_SONG = "INSERT INTO PLAYLIST_SONG (ID_PLAYLIST, ID_SONG) VALUES (?,?) ON DUPLICATE KEY UPDATE";
+    private static final String INSERT_PLAYLIST = "INSERT INTO PLAYLIST (QUANTITY_SONGS, PLAYLIST_NAME,DESCRIPTION,DURATION) VALUES (?,?,?,?)";
+    private static final String INSERT_PLAYLIST_USER = "INSERT INTO PLAYLIST_USER (ID_PLAYLIST, ID_USER) VALUES (?,?)";
+    private static final String INSERT_PLAYLIST_SONG = "INSERT INTO PLAYLIST_SONG (ID_PLAYLIST, ID_SONG) VALUES (?,?)";
 
     private final Connection connection;
 
@@ -33,10 +35,55 @@ public class JdbcPlaylistRepository implements PlaylistRepository {
     }
 
     private void insert(Playlist model){
+        try(
+                var preparedStatement = connection.prepareStatement(INSERT_PLAYLIST, Statement.RETURN_GENERATED_KEYS);
+                var playlistUserStatement = connection.prepareStatement(INSERT_PLAYLIST_USER);
+                var playlistSongStatement = connection.prepareStatement(INSERT_PLAYLIST_SONG)
+        ) {
+            connection.setAutoCommit(false);
+            preparedStatement.setInt(1, model.getNSongs());
+            preparedStatement.setString(2, model.getPlaylistName());
+            preparedStatement.setString(3, model.getDescription());
+            preparedStatement.setInt(4, model.getDuration());
+            preparedStatement.executeUpdate();
+            var keys = preparedStatement.getGeneratedKeys();
+            if(keys.next()){
+                model.setId(keys.getInt(1));
+            }
+
+            if(model.getSong()!=null){
+                for(var song:model.getSong()){
+                    playlistSongStatement.setInt(1, model.getId());
+                    playlistSongStatement.setInt(2, song.getId());
+                    playlistSongStatement.executeUpdate();
+                }
+            }
+
+            if(model.getUser()!=null){
+                for(var user:model.getUser()){
+                    playlistUserStatement.setInt(1, model.getId());
+                    playlistUserStatement.setInt(2, user.getId());
+                    playlistUserStatement.executeUpdate();
+                }
+            }
+            connection.commit();
+
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
     private void update(Playlist model){
+        try(
+                var preparedStatement = connection.prepareStatement("UPDATE PLAYLIST SET QUANTITY_SONGS = ?, PLAYLIST_NAME = ? WHERE ID_PLAYLIST = ?");
+                var playlistUserStatement = connection.prepareStatement(("UPDATE PLAYLIST SET ID_USER = ? WHERE ID_PLAYLIST = ?"));
+                var playlistSongStatement = connection.prepareStatement("UPDATE")
+                ) {
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 

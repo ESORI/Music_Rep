@@ -5,7 +5,7 @@ import com.esori.list.models.Playlist;
 import com.esori.list.models.Song;
 import com.esori.list.models.User;
 import com.esori.list.models.*;
-/*
+
 public class JpaModelFactory implements ModelFactory {
 
 
@@ -29,4 +29,4 @@ public class JpaModelFactory implements ModelFactory {
     public Playlist createPlaylist() {
         return new cat.uvic.teknos.musicrep.domain.jpa.models.Playlist();
     }
-}*/
+}

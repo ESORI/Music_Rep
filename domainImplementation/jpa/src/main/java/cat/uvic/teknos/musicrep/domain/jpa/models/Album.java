@@ -17,10 +17,11 @@ public class Album implements com.esori.list.models.Album {
     private String albumName;
     @Column(name = "SONGS QUANTITY")
     private int nSongs;
-    @Column(name = "ARTIST")
-    @Transient
+    @ManyToOne(targetEntity = cat.uvic.teknos.musicrep.domain.jpa.models.Artist.class)
+    @JoinColumn(name = "ARTIST")
     private Artist artist;
-    @Transient
+    @OneToMany(targetEntity = cat.uvic.teknos.musicrep.domain.jpa.models.Song.class)
+    @JoinColumn(name = "SONG")
     private Set<Song> song;
 
 

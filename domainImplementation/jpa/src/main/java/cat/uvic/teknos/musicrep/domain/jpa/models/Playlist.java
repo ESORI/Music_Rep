@@ -4,6 +4,7 @@ import com.esori.list.models.Song;
 import com.esori.list.models.User;
 import jakarta.persistence.*;
 
+import java.util.HashSet;
 import java.util.Set;
 @Entity
 @Table(name="PLAYLIST")
@@ -20,9 +21,17 @@ public class Playlist implements com.esori.list.models.Playlist {
     private String description;
     @Column(name = "DURATION")
     private int duration;
-    @Transient
-    private Set<Song> song;
-    @Transient
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, targetEntity = cat.uvic.teknos.musicrep.domain.jpa.models.Song.class)
+    @JoinTable(name = "PLAYLIST_SONG", joinColumns = {@JoinColumn(name="SONG")},
+            inverseJoinColumns = {@JoinColumn(name = "PLAYLIST")},
+            uniqueConstraints = {@UniqueConstraint(columnNames = {"SONG", "PLAYLIST"})})
+    private Set<Song> song = new HashSet<Song>();
+
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, targetEntity = cat.uvic.teknos.musicrep.domain.jpa.models.User.class)
+    @JoinTable(name = "PLAYLIST_USER", joinColumns = {@JoinColumn(name="USER")},
+            inverseJoinColumns = {@JoinColumn(name = "PLAYLIST")},
+            uniqueConstraints = {@UniqueConstraint(columnNames = {"USER", "PLAYLIST"})})
     private Set<User> user;
 
     @Override
@@ -95,3 +104,4 @@ public class Playlist implements com.esori.list.models.Playlist {
         this.user = user;
     }
 }
+
