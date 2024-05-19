@@ -294,7 +294,7 @@ public class JdbcArtistRepository implements ArtistRepository {
     public Artist get(Integer id) {
         String query = "SELECT * FROM ARTIST WHERE ID_ARTIST = ?";
         String query2 = "SELECT * FROM ALBUM WHERE ID_ARTIST = ?";
-        String query3 = "SELECT * FROM SONG WHERE ID_ARTIST = ?";
+        String query3 = "SELECT * FROM SONG WHERE ID_ARTIST = ? AND ID_ALBUM = ?";
         String query4 = "SELECT * FROM ARTIST_DATA WHERE ID_ARTIST =?";
 
         try (PreparedStatement statement = connection.prepareStatement(query);
@@ -336,7 +336,7 @@ public class JdbcArtistRepository implements ArtistRepository {
     public Set<Artist> getAll() {
         String query = "SELECT * FROM ARTIST";
         String query2 = "SELECT * FROM ALBUM WHERE ID_ARTIST = ?";
-        String query3 = "SELECT * FROM SONG WHERE ID_ARTIST = ?";
+        String query3 = "SELECT * FROM SONG WHERE ID_ARTIST = ? AND ID_ALBUM = ?";
         String query4 = "SELECT * FROM ARTIST_DATA";
 
         try (PreparedStatement statement = connection.prepareStatement(query);
@@ -386,13 +386,16 @@ public class JdbcArtistRepository implements ArtistRepository {
         var resultSetAlbum = albumStatement.executeQuery();
         while(resultSetAlbum.next()){
             Album resultAlbum = new cat.uvic.teknos.musicrep.domain.jdbc.models.Album();
+            resultAlbum.setId(resultSetAlbum.getInt("ID_ALBUM"));
             resultAlbum.setAlbumName(resultSetAlbum.getString("ALBUM_NAME"));
             resultAlbum.setNSongs(resultSetAlbum.getInt("QUANTITY_SONGS"));
 
             var songs = new HashSet<Song>();
+            songStatement.setInt(2, resultAlbum.getId());
             var resultSetSong = songStatement.executeQuery();
             while(resultSetSong.next()){
                 Song resultSong = new cat.uvic.teknos.musicrep.domain.jdbc.models.Song();
+                resultSong.setId(resultSetSong.getInt("ID_SONG"));
                 resultSong.setSongName(resultSetSong.getString("SONG_NAME"));
                 resultSong.setDuration(resultSetSong.getInt("DURATION"));
                 songs.add(resultSong);

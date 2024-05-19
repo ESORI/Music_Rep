@@ -21,11 +21,6 @@ public class JdbcModelFactory implements ModelFactory {
     }
 
     @Override
-    public Song createSong() {
-        return new cat.uvic.teknos.musicrep.domain.jdbc.models.Song();
-    }
-
-    @Override
     public Playlist createPlaylist() {
         return new cat.uvic.teknos.musicrep.domain.jdbc.models.Playlist();
     }

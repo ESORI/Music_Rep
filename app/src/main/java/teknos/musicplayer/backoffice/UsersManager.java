@@ -1,6 +1,8 @@
 package teknos.musicplayer.backoffice;
 
+import cat.uvic.teknos.musicrep.domain.jdbc.models.UserData;
 import com.esori.list.models.ModelFactory;
+import com.esori.list.models.User;
 import com.esori.list.repositories.UserRepository;
 import de.vandermeer.asciitable.AsciiTable;
 import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
@@ -24,27 +26,50 @@ public class UsersManager {
     }
 
     public void start(){
-        out.println("Users: ");
-        out.println("Type:");
-        out.println("1 to insert a new User");
 
         var command = "";
         do{
+            showMenu();
             command = readLine(in);
 
             switch (command){
                 case"1" -> insert();
                 case"2" -> update();
+                case"3" -> delete();
+                case"4" -> get();
                 case"5" -> getAll();
+                default -> out.println("Invalid command");
             }
 
-        }while(!command.equals("exit"));
+        }while(!command.equalsIgnoreCase("exit"));
         out.println("Bye!");
+    }
+
+    private void showMenu() {
+        out.println("***Users Manager***");
+        out.println("Type:");
+        out.println("1 to insert a new User");
+        out.println("2 to update User");
+        out.println("3 to delete User");
+        out.println("4 to get an User");
+        out.println("5 to show all Users");
+        out.println("'exit' to exit");
+    }
+
+    private void delete(){
+        var user = modelFactory.createUser();
+
+        out.println("Please enter the user id you wish to delete");
+        int id = Integer.parseInt(readLine(in));
+        user.setId(id);
+        userRepository.delete(user);
     }
 
     private void getAll() {
         var asciiTable = new AsciiTable();
         asciiTable.addRule();
+        //ONLY GETS USERNAME TO SEE WHAT USER ARE IN THE REPOSITORY, THEN WE WILL BE ABLE TO GET EVERY DATA
+        //FROM USING GET() SINCE I CONSIDER IT SHOULD BE MORE SPECIFIC
         asciiTable.addRow("Id", "Username");
         asciiTable.addRule();
 
@@ -53,6 +78,26 @@ public class UsersManager {
             asciiTable.addRule();
         }
 
+        getTable(asciiTable);
+    }
+
+    private void get(){
+        var asciiTable = new AsciiTable();
+        asciiTable.addRule();
+        asciiTable.addRow("Username", "Name", "Age", "Phone Number" ,"Country");
+        asciiTable.addRule();
+
+        out.println("Please enter the user id you wish to search");
+        int id = Integer.parseInt(readLine(in));
+        var user = userRepository.get(id);
+        asciiTable.addRow(user.getUsername(), user.getUserData().getUserName(),
+                user.getUserData().getAge(), user.getUserData().getPhoneNumber(), user.getUserData().getCountry());
+        asciiTable.addRule();
+
+        getTable(asciiTable);
+    }
+
+    private static void getTable(AsciiTable asciiTable) {
         asciiTable.setTextAlignment(TextAlignment.CENTER);
         String render = asciiTable.render();
         System.out.println(render);
@@ -60,21 +105,57 @@ public class UsersManager {
 
     private void update() {
         var user = modelFactory.createUser();
+        var userData = new UserData();
+
+        out.println("Please enter the user's id you wish to update");
+        int id = Integer.parseInt(readLine(in));
+        user.setId(id);
+        userData.setId(id);
+
+        out.println("Do you want to update the user's username? (yes/no)");
+        if(readLine(in).equalsIgnoreCase("yes")){
+            out.println("Username: ");
+            user.setUsername(readLine(in));}
+
+
+        out.println("Do you want to update the user's data? (yes/no)");
+        if(readLine(in).equalsIgnoreCase("yes")){
+            setUserData(user, userData);
+        }
+
+
         userRepository.save(user);
+    }
+
+    private void setUserData(User user, UserData userData) {
+        out.println("User name:");
+        userData.setUserName(readLine(in));
+
+        out.println("Phone number:");
+        userData.setPhoneNumber(Integer.parseInt(readLine(in)));
+        out.println("Country:");
+        userData.setCountry(readLine(in));
+        out.println("Age:");
+        userData.setAge(Integer.parseInt(readLine(in)));
+
+        user.setUserData(userData);
     }
 
     private void insert() {
         var user = modelFactory.createUser();
+        var userData = new UserData();
 
         out.println("Username: ");
         user.setUsername(readLine(in));
 
-        //out.println("User name:");
-        //user.setUserData();
+        out.println("Do you want to add Data to the user? (yes/no)");
+        if(readLine(in).equalsIgnoreCase("yes")){
+            setUserData(user, userData);
+        }
 
         userRepository.save(user);
 
-        out.println("Insert user succesfully: "+ user);
+        out.println("Inserted user succesfully: "+ user);
     }
 }
 

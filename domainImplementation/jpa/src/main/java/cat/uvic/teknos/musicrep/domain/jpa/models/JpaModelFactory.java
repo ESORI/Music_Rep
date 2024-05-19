@@ -21,11 +21,6 @@ public class JpaModelFactory implements ModelFactory {
     }
 
     @Override
-    public Song createSong() {
-        return new cat.uvic.teknos.musicrep.domain.jpa.models.Song();
-    }
-
-    @Override
     public Playlist createPlaylist() {
         return new cat.uvic.teknos.musicrep.domain.jpa.models.Playlist();
     }

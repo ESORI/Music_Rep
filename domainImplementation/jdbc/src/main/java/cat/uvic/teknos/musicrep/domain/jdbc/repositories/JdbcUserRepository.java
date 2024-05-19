@@ -134,9 +134,13 @@ public class JdbcUserRepository implements UserRepository {
 
     }
     private void updateUserData(com.esori.list.models.UserData model, int id) {
-        try(var userDataStatement = connection.prepareStatement("UPDATE USER_DATA SET USER_NAME = (?) WHERE ID_USER = (?)")){
-            userDataStatement.setInt(2, id);
+        try(var userDataStatement = connection.prepareStatement("UPDATE USER_DATA SET USER_NAME = (?), " +
+                "PHONE_NUM = ?, COUNTRY = ?, AGE = ? WHERE ID_USER = (?)")){
+            userDataStatement.setInt(5, id);
             userDataStatement.setString(1,model.getUserName());
+            userDataStatement.setInt(2,model.getPhoneNumber());
+            userDataStatement.setString(3,model.getCountry());
+            userDataStatement.setInt(4,model.getAge());
             userDataStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);

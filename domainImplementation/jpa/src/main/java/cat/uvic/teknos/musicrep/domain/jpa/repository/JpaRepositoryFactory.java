@@ -16,10 +16,6 @@ public class JpaRepositoryFactory implements RepositoryFactory {
         return null;
     }
 
-    @Override
-    public SongRepository getSongRepository() {
-        return null;
-    }
 
     @Override
     public ArtistRepository getArtistRepository() {

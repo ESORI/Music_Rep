@@ -31,17 +31,12 @@ public class JdbcRepositoryFactory implements RepositoryFactory {
     }
 
     @Override
-    public SongRepository getSongRepository() {
-        return null;
-    }
-
-    @Override
     public ArtistRepository getArtistRepository() {
-        return null;
+        return new JdbcArtistRepository(connection);
     }
 
     @Override
     public PlaylistRepository getPlaylistRepository() {
-        return null;
+        return new JdbcPlaylistRepository(connection);
     }
 }

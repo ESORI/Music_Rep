@@ -7,8 +7,6 @@ import com.esori.list.repositories.RepositoryFactory;
 
 public class App {
     public static void main(String[] args) {
-        //RepositoryFactory repositoryFactory = null;
-        //ModelFactory modelFactory = null;
         RepositoryFactory repositoryFactory = new JdbcRepositoryFactory();
         ModelFactory modelFactory = new JdbcModelFactory();
         var backOffice = new BackOffice(System.in, System.out, repositoryFactory, modelFactory);

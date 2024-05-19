@@ -30,12 +30,12 @@ public class BackOffice {
 
             switch (command){
                 case "1"-> manageArtists();
-                case "2"-> manageSongs();
-                case "3"-> managePlaylists();
-                case "4"->manageUsers();
+                case "2"-> managePlaylists();
+                case "3"->manageUsers();
+                default -> out.println("Invalid command");
             }
 
-        }while(!command.equals("exit"));
+        }while(!command.equalsIgnoreCase("exit"));
 
         out.println("Bye!");
 
@@ -46,15 +46,12 @@ public class BackOffice {
     }
 
     private void managePlaylists() {
-        out.println("Playlists");
+        new PlaylistsManager(in, out, repositoryFactory.getPlaylistRepository(), modelFactory).start();
     }
 
-    private void manageSongs() {
-        out.println("Songs");
-    }
 
     private void manageArtists() {
-        out.println("Artists");
+        new ArtistsManager(in, out, repositoryFactory.getArtistRepository(), modelFactory).start();
     }
 
 
@@ -65,8 +62,7 @@ public class BackOffice {
 
     private void showMainMenu() {
         out.println("1. Artist");
-        out.println("2. Song");
-        out.println("3. Playlist");
-        out.println("4. User");
+        out.println("2. Playlist");
+        out.println("3. User");
     }
 }

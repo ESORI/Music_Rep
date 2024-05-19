@@ -63,6 +63,9 @@ class JdbcUserRepositoryTest {
         UserData userData = new UserData();
         userData.setId(user.getId());
         userData.setUserName("Javier");
+        userData.setAge(33);
+        userData.setCountry("LI");
+        userData.setPhoneNumber(888555222);
 
         user.setUserData(userData);
 
@@ -79,6 +82,9 @@ class JdbcUserRepositoryTest {
         UserData userData1 = new UserData();
         userData1.setId(user2.getId());
         userData1.setUserName("Erika");
+        userData1.setAge(28);
+        userData1.setCountry("RO");
+        userData1.setPhoneNumber(111444777);
 
         user2.setUserData(userData1);
 
