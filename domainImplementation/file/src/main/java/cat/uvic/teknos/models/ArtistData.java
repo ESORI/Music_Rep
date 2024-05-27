@@ -10,6 +10,7 @@ public class ArtistData implements com.esori.list.models.ArtistData, Serializabl
     private String country;
     private String lang;
     private int debutYear;
+    private Artist artist;
 
     @Override
     public int getId() {
@@ -50,5 +51,15 @@ public class ArtistData implements com.esori.list.models.ArtistData, Serializabl
     @Override
     public void setDebutYear(int debutYear) {
         this.debutYear=debutYear;
+    }
+
+    @Override
+    public Artist getArtist() {
+        return artist;
+    }
+
+    @Override
+    public void setArtist(Artist artist) {
+        this.artist = artist;
     }
 }

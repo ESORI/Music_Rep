@@ -1,20 +1,26 @@
 package cat.uvic.teknos.musicrep.domain.jpa.models;
 
+import com.esori.list.models.Artist;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name="ARTIST DATA")
+@Table(name="ARTIST_DATA")
 public class ArtistData implements com.esori.list.models.ArtistData {
+
     @Id
-    @GeneratedValue
-    @Column(name = "ID")
+    @Column(name = "ID_ARTIST")
     private int id;
     @Column(name = "COUNTRY")
     private String country;
-    @Column(name = "LANGUAGE")
+    @Column(name = "LANG")
     private String lang;
-    @Column(name = "DEBUT YEAR")
+    @Column(name = "DEBUT_YEAR")
     private int debutYear;
+
+    @OneToOne(targetEntity = cat.uvic.teknos.musicrep.domain.jpa.models.Artist.class)
+    @MapsId
+    @JoinColumn(name="ID_ARTIST")
+    private Artist artist;
 
     @Override
     public int getId() {
@@ -56,4 +62,16 @@ public class ArtistData implements com.esori.list.models.ArtistData {
     public void setDebutYear(int debutYear) {
         this.debutYear=debutYear;
     }
+
+    @Override
+    public Artist getArtist() {
+        return artist;
+    }
+
+    @Override
+    public void setArtist(Artist artist) {
+        this.artist = artist;
+        this.id = artist.getId();
+    }
 }
+

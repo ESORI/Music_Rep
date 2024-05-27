@@ -3,6 +3,7 @@ import com.esori.list.models.Artist;
 import com.esori.list.models.Song;
 import jakarta.persistence.*;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -10,19 +11,22 @@ import java.util.Set;
 public class Album implements com.esori.list.models.Album {
 
     @Id
-    @GeneratedValue
-    @Column(name = "ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="ID_ALBUM")
     private int id;
-    @Column(name = "ALBUM NAME")
+
+    @Column(name="ALBUM_NAME")
     private String albumName;
-    @Column(name = "SONGS QUANTITY")
+    @Column(name="QUANTITY_SONGS")
     private int nSongs;
-    @ManyToOne(targetEntity = cat.uvic.teknos.musicrep.domain.jpa.models.Artist.class)
-    @JoinColumn(name = "ARTIST")
+    @ManyToOne(targetEntity = cat.uvic.teknos.musicrep.domain.jpa.models.Artist.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "ID_ARTIST")
     private Artist artist;
-    @OneToMany(targetEntity = cat.uvic.teknos.musicrep.domain.jpa.models.Song.class)
-    @JoinColumn(name = "SONG")
-    private Set<Song> song;
+
+    @OneToMany(cascade = CascadeType.ALL,orphanRemoval = true,targetEntity = cat.uvic.teknos.musicrep.domain.jpa.models.Song.class)
+    @JoinColumn(name = "ID_ALBUM")
+    private Set<Song> song = new HashSet<>();
+
 
 
     @Override
@@ -75,3 +79,4 @@ public class Album implements com.esori.list.models.Album {
         this.song = song;
     }
 }
+

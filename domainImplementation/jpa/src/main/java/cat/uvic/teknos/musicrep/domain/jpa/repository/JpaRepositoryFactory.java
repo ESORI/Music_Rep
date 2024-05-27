@@ -1,25 +1,33 @@
 package cat.uvic.teknos.musicrep.domain.jpa.repository;
-/*
+
 import com.esori.list.repositories.*;
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
+
+import java.io.IOException;
+import java.util.Properties;
 
 public class JpaRepositoryFactory implements RepositoryFactory {
 
     private final EntityManagerFactory entityManagerFactory;
+    private final EntityManager entityManager;
 
-    public JpaRepositoryFactory(){
-        entityManagerFactory = Persistence.createEntityManagerFactory("music_rep-mysql");
+    public JpaRepositoryFactory() throws IOException {
+        var properties = new Properties();
+        properties.load(JpaRepositoryFactory.class.getResourceAsStream("/persistence.properties"));
+        entityManagerFactory = Persistence.createEntityManagerFactory("music_rep-mysql", properties);
+        entityManager = entityManagerFactory.createEntityManager();
     }
     @Override
     public UserRepository getUserRepository() {
-        return null;
+        return new JpaUserRepository(entityManager);
     }
 
 
     @Override
     public ArtistRepository getArtistRepository() {
-        return new JpaArtistRepository(entityManagerFactory);
+        return new JpaArtistRepository(entityManager);
     }
 
     @Override
@@ -28,4 +36,4 @@ public class JpaRepositoryFactory implements RepositoryFactory {
     }
 }
 
- */
+

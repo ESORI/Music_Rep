@@ -5,9 +5,14 @@ import com.esori.list.models.Playlist;
 import com.esori.list.models.Song;
 import com.esori.list.models.User;
 import com.esori.list.models.*;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
+
+import java.io.IOException;
+import java.util.Properties;
 
 public class JpaModelFactory implements ModelFactory {
-
 
 
     @Override

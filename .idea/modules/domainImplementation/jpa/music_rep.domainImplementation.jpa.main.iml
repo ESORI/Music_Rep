@@ -6,9 +6,11 @@
         <setting name="validation-enabled" value="true" />
         <setting name="provider-name" value="Hibernate" />
         <datasource-mapping>
-          <factory-entry name="music_rep.domainImplementation.jpa.main" />
+          <factory-entry name="music_rep-mysql" value="e682c24c-da06-4004-94e7-278b9030dee5" />
+          <factory-entry name="music_rep.domainImplementation.jpa.main" value="e682c24c-da06-4004-94e7-278b9030dee5" />
         </datasource-mapping>
         <naming-strategy-map />
+        <deploymentDescriptor name="persistence.xml" url="file://$MODULE_DIR$/../../../../domainImplementation/jpa/src/main/resources/META-INF/persistence.xml" />
       </configuration>
     </facet>
   </component>

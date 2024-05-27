@@ -14,4 +14,7 @@ public interface ArtistData {
 
     int getDebutYear();
     void setDebutYear(int debutYear);
+
+    Artist getArtist();
+    void setArtist(Artist artist);
 }

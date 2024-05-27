@@ -12,7 +12,7 @@ import java.nio.file.StandardCopyOption;
 import static org.junit.jupiter.api.Assertions.*;
 
 class AlbumRepositoryTest {
-    /*
+
 
     @Test
     void save() {
@@ -132,5 +132,5 @@ class AlbumRepositoryTest {
         assertEquals(3, repository.getAll().size());
     }
 
-     */
+
 }

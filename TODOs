@@ -7,5 +7,3 @@ DONE->Artist should have a property called data of type ArtistData
 ### TODO2
 
 DONE->Avoid name shortcuts like nSongs, don't let others guess the meaning
-
-**M06UF3 has jpa?? tests (one to one, one to many...)

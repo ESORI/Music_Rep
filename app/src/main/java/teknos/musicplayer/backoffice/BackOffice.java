@@ -29,10 +29,19 @@ public class BackOffice {
             command = readLine(in);
 
             switch (command){
-                case "1"-> manageArtists();
-                case "2"-> managePlaylists();
-                case "3"->manageUsers();
-                default -> out.println("Invalid command");
+                case "1":
+                    manageArtists();
+                    break;
+                case "2":
+                    managePlaylists();
+                    break;
+                case "3":
+                    manageUsers();
+                    break;
+                default: if(!command.equalsIgnoreCase("exit")){
+                    out.println("Invalid command");
+                }
+                break;
             }
 
         }while(!command.equalsIgnoreCase("exit"));

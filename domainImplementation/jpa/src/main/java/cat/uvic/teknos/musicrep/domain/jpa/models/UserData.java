@@ -4,23 +4,27 @@ import com.esori.list.models.User;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name="USER DATA")
+@Table(name="USER_DATA")
 public class UserData implements com.esori.list.models.UserData {
+
     @Id
-    @GeneratedValue
-    @Column(name = "ID")
+    @Column(name="ID_USER")
     private int id;
-    @Transient
-    @Column(name = "USER")
-    private User user;
-    @Column(name = "USERNAME")
+
+    @Column(name="USER_NAME")
     private String userName;
-    @Column(name = "PHONE NUMBER")
+    @Column(name="PHONE_NUM")
     private int phoneNumber;
-    @Column(name = "COUNTRY")
+    @Column(name="COUNTRY")
     private String country;
-    @Column(name = "AGE")
+    @Column(name="AGE")
     private int age;
+
+    @OneToOne(targetEntity=cat.uvic.teknos.musicrep.domain.jpa.models.User.class, fetch = FetchType.LAZY)
+    @MapsId
+    @JoinColumn(name="ID_USER")
+    private User user;
+
 
     @Override
     public int getId() {
@@ -31,6 +35,17 @@ public class UserData implements com.esori.list.models.UserData {
     public void setId(int id) {
         this.id=id;
     }
+    @OneToOne(targetEntity=cat.uvic.teknos.musicrep.domain.jpa.models.User.class)
+    @Override
+    public User getUser() {
+        return user;
+    }
+
+    @Override
+    public void setUser(User user) {
+        this.user=user;
+        this.id = user.getId();
+    }
 
 
     @Override
@@ -40,7 +55,7 @@ public class UserData implements com.esori.list.models.UserData {
 
     @Override
     public void setUserName(String name) {
-        this.userName=userName;
+        this.userName=name;
     }
 
     @Override

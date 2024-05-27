@@ -9,22 +9,28 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name="SONGS")
+@Table(name="SONG")
 public class Song implements com.esori.list.models.Song {
     @Id
-    @GeneratedValue
-    @Column(name = "ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID_SONG")
     private int id;
-    @Column(name = "SONG NAME")
+    @Column(name = "SONG_NAME")
     private String songName;
     @Column(name = "DURATION")
     private int duration;
-    @Transient
+    @ManyToOne(targetEntity = cat.uvic.teknos.musicrep.domain.jpa.models.Artist.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "ID_ARTIST")
     private Artist artist;
-    @Transient
+    @ManyToOne(targetEntity = cat.uvic.teknos.musicrep.domain.jpa.models.Album.class, fetch = FetchType.LAZY)
+    @JoinColumn(name="ID_ALBUM")
     private Album album;
-    @ManyToMany(mappedBy = "SONGS")
-    private Set<Playlist> playlist = new HashSet<Playlist>();
+
+    @ManyToMany(
+            mappedBy = "songs",
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+            targetEntity = cat.uvic.teknos.musicrep.domain.jpa.models.Playlist.class)
+    private Set<Playlist> playlists = new HashSet<>();
 
     @Override
     public int getId() {
@@ -78,11 +84,14 @@ public class Song implements com.esori.list.models.Song {
 
     @Override
     public Set<Playlist> getPlaylist() {
-        return playlist;
+        return playlists;
     }
 
     @Override
     public void setPlaylist(Set<Playlist> playlist) {
-        this.playlist=playlist;
+        this.playlists=playlist;
     }
 }
+
+
+

@@ -10,29 +10,33 @@ import java.util.Set;
 @Table(name="PLAYLIST")
 public class Playlist implements com.esori.list.models.Playlist {
     @Id
-    @GeneratedValue
-    @Column(name = "ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID_PLAYLIST")
     private int id;
-    @Column(name = "SONGS QUANTITY")
+    @Column(name = "QUANTITY_SONGS")
     private int nSongs;
-    @Column(name = "PLAYLIST NAME")
+    @Column(name = "PLAYLIST_NAME")
     private String playlistName;
-    @Column(name = "DESCRIPION")
+    @Column(name = "DESCRIPTION")
     private String description;
     @Column(name = "DURATION")
     private int duration;
+
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, targetEntity = cat.uvic.teknos.musicrep.domain.jpa.models.Song.class)
-    @JoinTable(name = "PLAYLIST_SONG", joinColumns = {@JoinColumn(name="SONG")},
-            inverseJoinColumns = {@JoinColumn(name = "PLAYLIST")},
-            uniqueConstraints = {@UniqueConstraint(columnNames = {"SONG", "PLAYLIST"})})
-    private Set<Song> song = new HashSet<Song>();
+    @JoinTable(name = "PLAYLIST_SONG",
+            joinColumns = {@JoinColumn(name="ID_PLAYLIST")},
+            inverseJoinColumns = {@JoinColumn(name = "ID_SONG")},
+            uniqueConstraints = {@UniqueConstraint(columnNames = {"ID_PLAYLIST", "ID_SONG"})})
+    private Set<Song> songs = new HashSet<>();
 
-
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, targetEntity = cat.uvic.teknos.musicrep.domain.jpa.models.User.class)
-    @JoinTable(name = "PLAYLIST_USER", joinColumns = {@JoinColumn(name="USER")},
-            inverseJoinColumns = {@JoinColumn(name = "PLAYLIST")},
-            uniqueConstraints = {@UniqueConstraint(columnNames = {"USER", "PLAYLIST"})})
-    private Set<User> user;
+    @ManyToMany(
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+            targetEntity = cat.uvic.teknos.musicrep.domain.jpa.models.User.class)
+    @JoinTable(name = "PLAYLIST_USER",
+            joinColumns = {@JoinColumn(name="ID_PLAYLIST")},
+            inverseJoinColumns = {@JoinColumn(name = "ID_USER")},
+            uniqueConstraints = {@UniqueConstraint(columnNames = {"ID_PLAYLIST", "ID_USER"})})
+    private Set<User> users;
 
     @Override
     public int getId() {
@@ -86,22 +90,22 @@ public class Playlist implements com.esori.list.models.Playlist {
 
     @Override
     public Set<Song> getSong() {
-        return song;
+        return songs;
     }
 
     @Override
     public void setSong(Set<Song> song) {
-        this.song = song;
+        this.songs = song;
     }
 
     @Override
     public Set<User> getUser() {
-        return user;
+        return users;
     }
 
     @Override
     public void setUser(Set<User> user) {
-        this.user = user;
+        this.users = user;
     }
 }
 

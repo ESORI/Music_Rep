@@ -11,6 +11,7 @@ import java.util.Properties;
 import com.fcardara.dbtestutils.exceptions.ScriptExecutorException;
 
 public class DbUtils {
+    private static Connection connection;
     private static Connection connectToServer(Path connectionProperties) {
         var properties = new Properties();
             try {
@@ -37,8 +38,11 @@ public class DbUtils {
             }
     }
     private static Connection connect(String url, String user, String password) {
-        try {  
-            return DriverManager.getConnection(url, user, password);
+        try {
+            if(connection == null || connection.isClosed()) {
+                connection = DriverManager.getConnection(url, user, password);
+            }
+            return connection;
         } catch (SQLException e) {
             throw new ScriptExecutorException(e);
         }

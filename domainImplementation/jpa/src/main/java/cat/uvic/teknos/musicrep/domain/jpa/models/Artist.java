@@ -2,6 +2,7 @@ package cat.uvic.teknos.musicrep.domain.jpa.models;
 
 import com.esori.list.models.Album;
 import com.esori.list.models.ArtistData;
+import com.esori.list.models.Song;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
@@ -12,21 +13,30 @@ import java.util.Set;
 public class Artist implements com.esori.list.models.Artist {
 
     @Id
-    @GeneratedValue
-    @Column(name = "ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID_ARTIST")
     private int id;
-    @Column(name = "GROUP NAME")
+    @Column(name = "GROUP_NAME")
     private String groupName;
-    @Column(name = "MONTHLY LISTENERS")
+    @Column(name = "MONTHLY_LIST")
     private int monthlyList;
 
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, targetEntity = cat.uvic.teknos.musicrep.domain.jpa.models.Album.class)
-    @JoinColumn(name = "ALBUM")
-    private Set<Album> album;
+    @OneToMany(
+            //mappedBy = "artist",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            targetEntity = cat.uvic.teknos.musicrep.domain.jpa.models.Album.class)
+    @JoinColumn(name = "ID_ARTIST")
+    private Set<Album> album = new HashSet<>();
 
-    @JoinColumn(name = "ARTIST DATA")
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, targetEntity = cat.uvic.teknos.musicrep.domain.jpa.models.ArtistData.class)
+
+
+    @OneToOne(
+            mappedBy = "artist",
+            cascade = CascadeType.ALL,
+            targetEntity = cat.uvic.teknos.musicrep.domain.jpa.models.ArtistData.class)
+    @PrimaryKeyJoinColumn
     private ArtistData artistData;
 
     @Override
@@ -61,13 +71,14 @@ public class Artist implements com.esori.list.models.Artist {
 
     @Override
     public Set<Album> getAlbum() {
-        return null;
+        return album;
     }
 
     @Override
     public void setAlbum(Set<Album> album) {
         this.album=album;
     }
+
 
     @Override
     public ArtistData getArtistData() {
@@ -77,6 +88,7 @@ public class Artist implements com.esori.list.models.Artist {
     @Override
     public void setArtistData(ArtistData artistData) {
         this.artistData = artistData;
+        this.artistData.setArtist(this);
     }
 
 

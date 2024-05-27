@@ -11,6 +11,7 @@ public class UserData implements com.esori.list.models.UserData, Serializable {
     private int phoneNumber;
     private String country;
     private int age;
+    private User user;
 
     @Override
     public int getId() {
@@ -20,6 +21,16 @@ public class UserData implements com.esori.list.models.UserData, Serializable {
     @Override
     public void setId(int id) {
         this.id=id;
+    }
+
+    @Override
+    public User getUser() {
+        return user;
+    }
+
+    @Override
+    public void setUser(User user) {
+        this.user=user;
     }
 
     @Override
