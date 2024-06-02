@@ -204,16 +204,18 @@ public class ArtistsManager {
     }
 
     private void updateSong(HashSet<com.esori.list.models.Song> songs, Album album, Artist artist) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+
         out.println("Please enter the song's id you wish to update");
-        int songId = Integer.parseInt(readLine(in));
+        //int songId = Integer.parseInt(readLine(in));
         var song = (Song) Class.forName(properties.getProperty("song")).getConstructor().newInstance();
-        song.setId(songId);
+        song.setAlbum(album);
+        song.setArtist(artist);
+        song.setId(Integer.parseInt(readLine(in)));
         out.println("New song name:");
         song.setSongName(readLine(in));
         out.println("New song duration (sec):");
         song.setDuration(Integer.parseInt(readLine(in)));
-        song.setAlbum(album);
-        song.setArtist(artist);
+
         songs.add(song);
         album.setSong(songs);
     }
