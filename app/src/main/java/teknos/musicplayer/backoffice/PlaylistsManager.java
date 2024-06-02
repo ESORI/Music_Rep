@@ -1,15 +1,19 @@
 package teknos.musicplayer.backoffice;
 
-import cat.uvic.teknos.musicrep.domain.jdbc.models.Song;
-import cat.uvic.teknos.musicrep.domain.jdbc.models.User;
 import com.esori.list.models.ModelFactory;
+import com.esori.list.models.Song;
+import com.esori.list.models.User;
 import com.esori.list.repositories.PlaylistRepository;
 import de.vandermeer.asciitable.AsciiTable;
+import de.vandermeer.asciithemes.a7.A7_Grids;
 import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.PrintStream;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
+import java.util.Properties;
 
 import static teknos.musicplayer.backoffice.IOUtils.readLine;
 
@@ -19,15 +23,17 @@ public class PlaylistsManager {
     private final BufferedReader in;
     private final PlaylistRepository playlistRepository;
     private final ModelFactory modelFactory;
+    private final Properties properties = new Properties();
 
-    public PlaylistsManager(BufferedReader in, PrintStream out, PlaylistRepository playlistRepository, ModelFactory modelFactory){
+    public PlaylistsManager(BufferedReader in, PrintStream out, PlaylistRepository playlistRepository, ModelFactory modelFactory) throws IOException {
         this.out = out;
         this.in = in;
         this.playlistRepository = playlistRepository;
         this.modelFactory = modelFactory;
+        properties.load(App.class.getResourceAsStream("/app.properties"));
     }
 
-    public void start(){
+    public void start() throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 
         var command = "";
         do{
@@ -40,7 +46,9 @@ public class PlaylistsManager {
                 case"3" -> delete();
                 case"4" -> get();
                 case"5" -> getAll();
-                default -> out.println("Invalid command");
+                default -> {
+                    if(!command.equalsIgnoreCase("exit")){out.println("Invalid command");}
+                }
             }
 
         }while(!command.equalsIgnoreCase("exit"));
@@ -58,7 +66,7 @@ public class PlaylistsManager {
         out.println("'exit' to exit");
     }
 
-    private void insert(){
+    private void insert() throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         var playlist = modelFactory.createPlaylist();
         var users = new HashSet<com.esori.list.models.User>();
         var songs = new HashSet<com.esori.list.models.Song>();
@@ -70,14 +78,14 @@ public class PlaylistsManager {
         out.println("Total duration of playlist?");
         playlist.setDuration(Integer.parseInt(readLine(in)));
 
-        out.println("Do you want to add any Users in the playlist?");
+        out.println("Do you want to add any Users in the playlist?(yes/no)");
         if(readLine(in).equalsIgnoreCase("yes")){
             out.println("How many?");
             int totalUsers = Integer.parseInt(readLine(in));
             insertUsers(totalUsers, users);
         }
 
-        out.println("Hoy many songs would you like to add to your playlist?");
+        out.println("Hoy many songs would you like to add to your playlist?(0,1...)");
         int totalSongs = Integer.parseInt(readLine(in));
         playlist.setNSongs(totalSongs);
         if(totalSongs>0){
@@ -90,25 +98,25 @@ public class PlaylistsManager {
         out.println("Inserted artist succesfully: "+ playlist);
     }
 
-    private void insertUsers(int totalUsers, HashSet<com.esori.list.models.User> users) {
+    private void insertUsers(int totalUsers, HashSet<User> users) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         for(int i1 = 0; i1 < totalUsers; i1++){
-            var user = new User();
+            var user = (User) Class.forName(properties.getProperty("user")).getConstructor().newInstance();
             out.println("Please add the user's id");
             user.setId(Integer.parseInt(readLine(in)));
             users.add(user);
         }
     }
 
-    private void insertSongs(int totalSongs, HashSet<com.esori.list.models.Song> songs) {
+    private void insertSongs(int totalSongs, HashSet<com.esori.list.models.Song> songs) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         for(int i = 0; i< totalSongs; i++){
-            var song = new Song();
+            var song = (Song) Class.forName(properties.getProperty("song")).getConstructor().newInstance();
             out.println("Please add the song's id");
             song.setId(Integer.parseInt(readLine(in)));
             songs.add(song);
         }
     }
 
-    private void update(){
+    private void update() throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         var playlist = modelFactory.createPlaylist();
         var users = new HashSet<com.esori.list.models.User>();
         var songs = new HashSet<com.esori.list.models.Song>();
@@ -118,13 +126,14 @@ public class PlaylistsManager {
         int id = Integer.parseInt(readLine(in));
         playlist.setId(id);
 
-        out.println("Do you want to update the playlist? (yes/no)\n(Name cannot be changed)");
-        if(readLine(in).equalsIgnoreCase("yes")){
-            out.println("New description:");
-            playlist.setDescription(readLine(in));
-        }else{
-            playlist.setDescription(playlist.getDescription());
-        }
+        out.println("New name of playlist?");
+        playlist.setPlaylistName(readLine(in));
+        out.println("New description:");
+        playlist.setDescription(readLine(in));
+        out.println("New duration of playlist?");
+        playlist.setDuration(Integer.parseInt(readLine(in)));
+        out.println("Total songs in playlist?");
+        playlist.setNSongs(Integer.parseInt(readLine(in)));
 
         out.println("How many songs do you want to add to your playlist");
         totalSongs = Integer.parseInt(readLine(in));
@@ -143,7 +152,7 @@ public class PlaylistsManager {
         playlistRepository.save(playlist);
     }
 
-    private void delete(){
+    private void delete() throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         var playlist = modelFactory.createPlaylist();
         var users = new HashSet<com.esori.list.models.User>();
         var songs = new HashSet<com.esori.list.models.Song>();
@@ -160,7 +169,7 @@ public class PlaylistsManager {
                 int totalSongs = Integer.parseInt(readLine(in));
                 for(int i = 0; i<totalSongs; i++){
                     out.println("Please enter the id of the song you would like to delete");
-                    var song = new Song();
+                    var song = (Song) Class.forName(properties.getProperty("song")).getConstructor().newInstance();
                     song.setId(Integer.parseInt(readLine(in)));
                     songs.add(song);
                 }
@@ -171,7 +180,7 @@ public class PlaylistsManager {
                 int totalUsers = Integer.parseInt(readLine(in));
                 for(int i = 0; i<totalUsers; i++){
                     out.println("Please enter the id of the user you would like to delete");
-                    var user = new User();
+                    var user = (User) Class.forName(properties.getProperty("user")).getConstructor().newInstance();
                     user.setId(Integer.parseInt(readLine(in)));
                     users.add(user);
                 }
@@ -228,6 +237,7 @@ public class PlaylistsManager {
     }
     private static void getTable(AsciiTable asciiTable) {
         asciiTable.setTextAlignment(TextAlignment.CENTER);
+        asciiTable.getContext().setGrid(A7_Grids.minusBarPlusEquals());
         String render = asciiTable.render();
         System.out.println(render);
     }

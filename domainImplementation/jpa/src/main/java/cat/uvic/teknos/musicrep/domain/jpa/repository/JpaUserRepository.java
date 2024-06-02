@@ -2,6 +2,7 @@ package cat.uvic.teknos.musicrep.domain.jpa.repository;
 
 
 import com.esori.list.models.User;
+import com.esori.list.models.UserData;
 import com.esori.list.repositories.UserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -27,11 +28,16 @@ public class JpaUserRepository implements UserRepository {
 
         try{
             entityManager.getTransaction().begin();
+
             if(model.getId()<=0){
                 //INSERT USER
                 entityManager.persist(model);
             }else if(!entityManager.contains(model)){
                 //UPDATE USER
+                if(model.getUserData()==null){
+                    var userData = entityManager.find(cat.uvic.teknos.musicrep.domain.jpa.models.UserData.class, model.getId());
+                    model.setUserData(userData);
+                }
                 entityManager.merge(model);
             }
             entityManager.getTransaction().commit();

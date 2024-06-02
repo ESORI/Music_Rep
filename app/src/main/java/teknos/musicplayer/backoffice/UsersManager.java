@@ -1,31 +1,41 @@
 package teknos.musicplayer.backoffice;
 
-import cat.uvic.teknos.musicrep.domain.jdbc.models.UserData;
+
 import com.esori.list.models.ModelFactory;
 import com.esori.list.models.User;
+import com.esori.list.models.UserData;
 import com.esori.list.repositories.UserRepository;
 import de.vandermeer.asciitable.AsciiTable;
+import de.vandermeer.asciithemes.a7.A7_Grids;
 import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.PrintStream;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Properties;
 
 import static teknos.musicplayer.backoffice.IOUtils.readLine;
+
 
 public class UsersManager {
     private final PrintStream out;
     private final BufferedReader in;
     private final UserRepository userRepository;
     private final ModelFactory modelFactory;
+    private final Properties properties = new Properties();
 
-    public UsersManager(BufferedReader in, PrintStream out, UserRepository userRepository, ModelFactory modelFactory) {
+
+    public UsersManager(BufferedReader in, PrintStream out, UserRepository userRepository, ModelFactory modelFactory) throws IOException {
         this.out = out;
         this.in = in;
         this.userRepository = userRepository;
         this.modelFactory = modelFactory;
+        properties.load(App.class.getResourceAsStream("/app.properties"));
     }
 
-    public void start(){
+
+    public void start() throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
 
         var command = "";
         do{
@@ -38,7 +48,9 @@ public class UsersManager {
                 case"3" -> delete();
                 case"4" -> get();
                 case"5" -> getAll();
-                default -> out.println("Invalid command");
+                default -> {
+                    if(!command.equalsIgnoreCase("exit")){out.println("Invalid command");}
+                }
             }
 
         }while(!command.equalsIgnoreCase("exit"));
@@ -83,15 +95,28 @@ public class UsersManager {
 
     private void get(){
         var asciiTable = new AsciiTable();
+        out.println("Please enter the user id you wish to search");
+        int id = Integer.parseInt(readLine(in));
+        var user = userRepository.get(id);
+
+        int age;
+        int phoneNum;
+        String country;
+        if(user.getUserData()!=null){
+            age = user.getUserData().getAge();
+            phoneNum = user.getUserData().getPhoneNumber();
+            country = user.getUserData().getCountry();
+        }else{
+            age = 0;
+            phoneNum = 0;
+            country = "No data";
+        }
         asciiTable.addRule();
         asciiTable.addRow("Username", "Name", "Age", "Phone Number" ,"Country");
         asciiTable.addRule();
 
-        out.println("Please enter the user id you wish to search");
-        int id = Integer.parseInt(readLine(in));
-        var user = userRepository.get(id);
         asciiTable.addRow(user.getUsername(), user.getUserData().getUserName(),
-                user.getUserData().getAge(), user.getUserData().getPhoneNumber(), user.getUserData().getCountry());
+                age, phoneNum, country);
         asciiTable.addRule();
 
         getTable(asciiTable);
@@ -99,23 +124,22 @@ public class UsersManager {
 
     private static void getTable(AsciiTable asciiTable) {
         asciiTable.setTextAlignment(TextAlignment.CENTER);
+        asciiTable.getContext().setGrid(A7_Grids.minusBarPlusEquals());
         String render = asciiTable.render();
         System.out.println(render);
     }
 
-    private void update() {
+    private void update() throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         var user = modelFactory.createUser();
-        var userData = new UserData();
+        var userData = (UserData) Class.forName(properties.getProperty("userData")).getConstructor().newInstance();
 
         out.println("Please enter the user's id you wish to update");
         int id = Integer.parseInt(readLine(in));
         user.setId(id);
         userData.setId(id);
 
-        out.println("Do you want to update the user's username? (yes/no)");
-        if(readLine(in).equalsIgnoreCase("yes")){
-            out.println("Username: ");
-            user.setUsername(readLine(in));}
+        out.println("Username: ");
+        user.setUsername(readLine(in));
 
 
         out.println("Do you want to update the user's data? (yes/no)");
@@ -141,9 +165,9 @@ public class UsersManager {
         user.setUserData(userData);
     }
 
-    private void insert() {
+    private void insert() throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         var user = modelFactory.createUser();
-        var userData = new UserData();
+        var userData = (UserData) Class.forName(properties.getProperty("userData")).getConstructor().newInstance();
 
         out.println("Username: ");
         user.setUsername(readLine(in));

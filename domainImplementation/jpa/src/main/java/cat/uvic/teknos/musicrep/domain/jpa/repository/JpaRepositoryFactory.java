@@ -10,13 +10,12 @@ import java.util.Properties;
 
 public class JpaRepositoryFactory implements RepositoryFactory {
 
-    private final EntityManagerFactory entityManagerFactory;
     private final EntityManager entityManager;
 
     public JpaRepositoryFactory() throws IOException {
         var properties = new Properties();
         properties.load(JpaRepositoryFactory.class.getResourceAsStream("/persistence.properties"));
-        entityManagerFactory = Persistence.createEntityManagerFactory("music_rep-mysql", properties);
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("music_rep-mysql", properties);
         entityManager = entityManagerFactory.createEntityManager();
     }
     @Override
@@ -32,7 +31,7 @@ public class JpaRepositoryFactory implements RepositoryFactory {
 
     @Override
     public PlaylistRepository getPlaylistRepository() {
-        return null;
+        return new JpaPlaylistRepository(entityManager);
     }
 }
 

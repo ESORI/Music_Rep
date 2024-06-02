@@ -2,6 +2,8 @@ package cat.uvic.teknos.musicrep.domain.jpa.repository;
 
 import com.esori.list.models.Artist;
 import com.esori.list.models.Playlist;
+import com.esori.list.models.Song;
+import com.esori.list.models.User;
 import com.esori.list.repositories.PlaylistRepository;
 import jakarta.persistence.EntityManager;
 
@@ -22,8 +24,11 @@ public class JpaPlaylistRepository implements PlaylistRepository {
 
         try{
             entityManager.getTransaction().begin();
+            saveUser(model);
+            saveSong(model);
             if(model.getId()<=0){
                 //INSERT PLAYLIST
+
                 entityManager.persist(model);
             }else if(!entityManager.contains(model)){
                 //UPDATE PLAYLIST
@@ -32,6 +37,28 @@ public class JpaPlaylistRepository implements PlaylistRepository {
             entityManager.getTransaction().commit();
         }catch (Exception e){
             entityManager.getTransaction().rollback();
+        }
+    }
+
+    private void saveUser(Playlist model) {
+        if(model.getUser()!=null){
+            var users = new HashSet<User>();
+            for(var user: model.getUser()){
+                var addedUser = entityManager.find(cat.uvic.teknos.musicrep.domain.jpa.models.User.class, user.getId());
+                users.add(addedUser);
+            }
+            model.setUser(users);
+        }
+    }
+
+    private void saveSong(Playlist model) {
+        if(model.getSong()!=null){
+            var songs = new HashSet<Song>();
+            for(var song: model.getSong()){
+                var addedSong = entityManager.find(cat.uvic.teknos.musicrep.domain.jpa.models.Song.class, song.getId());
+                songs.add(addedSong);
+            }
+            model.setSong(songs);
         }
     }
 

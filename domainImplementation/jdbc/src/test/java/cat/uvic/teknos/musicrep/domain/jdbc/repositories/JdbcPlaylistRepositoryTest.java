@@ -78,6 +78,8 @@ class JdbcPlaylistRepositoryTest {
         playlist.setId(2);
         playlist.setDescription("Description test");
         playlist.setNSongs(3);
+        playlist.setPlaylistName("Name test");
+        playlist.setDuration(654);
 
 
         Song song = new Song();

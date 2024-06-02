@@ -10,6 +10,7 @@ dependencies {
     implementation("org.apache.commons:commons-text")
     implementation(project(":utilities"))
     implementation(project(":domainImplementation:jdbc"))
+    implementation(project(":domainImplementation:jpa"))
     implementation("de.vandermeer:asciitable:0.3.2")
 }
 

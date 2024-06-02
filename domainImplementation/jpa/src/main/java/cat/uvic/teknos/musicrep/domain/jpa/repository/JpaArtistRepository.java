@@ -1,5 +1,7 @@
 package cat.uvic.teknos.musicrep.domain.jpa.repository;
 
+import cat.uvic.teknos.musicrep.domain.jpa.models.Song;
+import com.esori.list.models.Album;
 import com.esori.list.models.Artist;
 import com.esori.list.repositories.ArtistRepository;
 import jakarta.persistence.EntityManager;
@@ -26,6 +28,12 @@ public class JpaArtistRepository implements ArtistRepository {
                 entityManager.persist(model);
             }else if(!entityManager.contains(model)){
                 //UPDATE ARTIST
+
+                if(model.getArtistData()==null){
+                    var artistData = entityManager.find(cat.uvic.teknos.musicrep.domain.jpa.models.ArtistData.class, model.getId());
+                    model.setArtistData(artistData);
+                }
+
                 entityManager.merge(model);
             }
             entityManager.getTransaction().commit();
@@ -38,7 +46,7 @@ public class JpaArtistRepository implements ArtistRepository {
     public void delete(Artist model) {
         try{
             entityManager.getTransaction().begin();
-            var artist = entityManager.find(cat.uvic.teknos.musicrep.domain.jpa.models.Artist.class, model.getId());
+            Artist artist = entityManager.find(cat.uvic.teknos.musicrep.domain.jpa.models.Artist.class, model.getId());
             entityManager.remove(artist);
             entityManager.getTransaction().commit();
         }catch (Exception e){

@@ -6,6 +6,7 @@ import teknos.musicplayer.backoffice.exceptions.BackOfficeException;
 
 import static teknos.musicplayer.backoffice.IOUtils.*;
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 
 public class BackOffice {
     private final BufferedReader in;
@@ -20,7 +21,7 @@ public class BackOffice {
         this.modelFactory = modelFactory;
     }
 
-    public void start(){
+    public void start() throws IOException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         showWelcomeMessage();
 
         var command = "";
@@ -50,16 +51,16 @@ public class BackOffice {
 
     }
 
-    private void manageUsers() {
+    private void manageUsers() throws IOException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         new UsersManager(in, out, repositoryFactory.getUserRepository(), modelFactory).start();
     }
 
-    private void managePlaylists() {
+    private void managePlaylists() throws IOException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         new PlaylistsManager(in, out, repositoryFactory.getPlaylistRepository(), modelFactory).start();
     }
 
 
-    private void manageArtists() {
+    private void manageArtists() throws IOException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         new ArtistsManager(in, out, repositoryFactory.getArtistRepository(), modelFactory).start();
     }
 

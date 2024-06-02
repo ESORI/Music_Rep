@@ -110,7 +110,7 @@ public class JdbcArtistRepository implements ArtistRepository {
 
     private void update(Artist model){
         try(
-                var preparedStatement = connection.prepareStatement("UPDATE ARTIST SET GROUP_NAME = ? WHERE ID_ARTIST = ?");
+                var preparedStatement = connection.prepareStatement("UPDATE ARTIST SET GROUP_NAME = ?, MONTHLY_LIST = ? WHERE ID_ARTIST = ?");
                 ) {
             connection.setAutoCommit(false);
 
@@ -118,7 +118,8 @@ public class JdbcArtistRepository implements ArtistRepository {
 
             if(model.getGroupName()!=null){
                 preparedStatement.setString(1, model.getGroupName());
-                preparedStatement.setInt(2, id);
+                preparedStatement.setInt(2, model.getMonthlyList());
+                preparedStatement.setInt(3, id);
                 preparedStatement.executeUpdate();
             }
 
@@ -162,10 +163,12 @@ public class JdbcArtistRepository implements ArtistRepository {
 
     private void updateArtistData(ArtistData model, int id) {
         try(
-                var statement = connection.prepareStatement("UPDATE ARTIST_DATA SET COUNTRY = ? WHERE ID_ARTIST = ?")
+                var statement = connection.prepareStatement("UPDATE ARTIST_DATA SET COUNTRY = ?, LANG = ?, DEBUT_YEAR = ? WHERE ID_ARTIST = ?")
                 ){
             statement.setString(1, model.getCountry());
-            statement.setInt(2, id);
+            statement.setString(2, model.getLang());
+            statement.setInt(3, model.getDebutYear());
+            statement.setInt(4, id);
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -202,13 +205,14 @@ public class JdbcArtistRepository implements ArtistRepository {
 
     private void updateAlbum(Album model, int id) {
         try(
-                var statement = connection.prepareStatement("UPDATE ALBUM SET ALBUM_NAME = ? WHERE ID_ARTIST = ? AND ID_ALBUM = ?");
+                var statement = connection.prepareStatement("UPDATE ALBUM SET ALBUM_NAME = ?, QUANTITY_SONGS = ? WHERE ID_ARTIST = ? AND ID_ALBUM = ?");
 
                 ) {
             int idAlbum = model.getId();
             statement.setString(1, model.getAlbumName());
-            statement.setInt(2, id);
-            statement.setInt(3, idAlbum);
+            statement.setInt(2, model.getNSongs());
+            statement.setInt(3, id);
+            statement.setInt(4, idAlbum);
             statement.executeUpdate();
 
             if(model.getSong()!=null){

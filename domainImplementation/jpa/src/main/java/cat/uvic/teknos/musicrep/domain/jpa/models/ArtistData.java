@@ -10,9 +10,9 @@ public class ArtistData implements com.esori.list.models.ArtistData {
     @Id
     @Column(name = "ID_ARTIST")
     private int id;
-    @Column(name = "COUNTRY")
+    @Column(name = "COUNTRY", columnDefinition="char(3)")
     private String country;
-    @Column(name = "LANG")
+    @Column(name = "LANG", columnDefinition = "char(3)")
     private String lang;
     @Column(name = "DEBUT_YEAR")
     private int debutYear;

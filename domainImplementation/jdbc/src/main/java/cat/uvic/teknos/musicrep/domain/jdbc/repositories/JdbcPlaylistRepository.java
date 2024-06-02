@@ -104,7 +104,7 @@ public class JdbcPlaylistRepository implements PlaylistRepository {
     //SO IF WE ADD A SONG/USER HERE IT WILL ONLY INSERT IT
     private void update(Playlist model) {
         try (
-                var preparedStatement = connection.prepareStatement("UPDATE PLAYLIST SET QUANTITY_SONGS = ?, DESCRIPTION = ? WHERE ID_PLAYLIST = ?");
+                var preparedStatement = connection.prepareStatement("UPDATE PLAYLIST SET QUANTITY_SONGS = ?, DESCRIPTION = ?, PLAYLIST_NAME = ?, DURATION = ? WHERE ID_PLAYLIST = ?");
         ) {
             connection.setAutoCommit(false);
 
@@ -113,7 +113,9 @@ public class JdbcPlaylistRepository implements PlaylistRepository {
             if (model.getDescription() != null) {
                 preparedStatement.setInt(1, model.getNSongs());
                 preparedStatement.setString(2, model.getDescription());
-                preparedStatement.setInt(3, id);
+                preparedStatement.setString(3, model.getPlaylistName());
+                preparedStatement.setInt(4, model.getDuration());
+                preparedStatement.setInt(5, id);
                 preparedStatement.executeUpdate();
             }
 

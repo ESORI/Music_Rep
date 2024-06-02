@@ -87,19 +87,24 @@ class JdbcArtistRepositoryTest {
         Artist artist1 = new Artist();
         artist1.setId(3);
         artist1.setGroupName("Ghost");
+        artist1.setMonthlyList(156600);
 
 
         Artist artist = new Artist();
         artist.setId(1);
         artist.setGroupName("The Offspring");
+        artist.setMonthlyList(156600);
 
         ArtistData artistData = new ArtistData();
         artistData.setId(artist.getId());
         artistData.setCountry("AAA");
+        artistData.setLang("ENG");
+        artistData.setDebutYear(2006);
 
         Album album = new Album();
         album.setId(1);
         album.setAlbumName("Americana");
+        album.setNSongs(13);
 
         Song song = new Song();
         song.setId(1);

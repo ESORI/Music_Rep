@@ -15,9 +15,9 @@ public class UserData implements com.esori.list.models.UserData {
     private String userName;
     @Column(name="PHONE_NUM")
     private int phoneNumber;
-    @Column(name="COUNTRY")
+    @Column(name="COUNTRY", columnDefinition = "char(3)")
     private String country;
-    @Column(name="AGE")
+    @Column(name="AGE", columnDefinition = "char(3)")
     private int age;
 
     @OneToOne(targetEntity=cat.uvic.teknos.musicrep.domain.jpa.models.User.class, fetch = FetchType.LAZY)

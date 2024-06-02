@@ -18,7 +18,6 @@
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
             <property name="" value="false"/>
             <property name="hibernate.format_sql" value="true"/>
-            <property name="jakarta.persistence.sql-load-script-source" value="/data.sql"/>
         </properties>
     </persistence-unit>
 </persistence>

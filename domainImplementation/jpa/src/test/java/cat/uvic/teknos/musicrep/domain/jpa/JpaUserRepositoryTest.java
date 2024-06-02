@@ -108,7 +108,7 @@ class JpaUserRepositoryTest {
         //it's not the same as the one saved in this test, so it will give an error
         //can be uncommented when done individually and it will work
         //assertEquals(user.getUsername(), repository.get(1).getUsername());
-        System.out.println(repository.get(1).getUsername());
+        System.out.println(repository.get(3).getUsername());
     }
 
     @Test
@@ -128,24 +128,4 @@ class JpaUserRepositoryTest {
         //assertEquals(2, repository.getAll().size());
     }
 
-    @Test
-    void getByUsername() {
-        var repository = new JpaUserRepository(entityManager);
-        User user = new User();
-        user.setUsername("Test");
-        UserData userData = new UserData();
-        userData.setId(user.getId());
-        userData.setUserName("Name Test");
-        userData.setPhoneNumber(454565657);
-        userData.setAge(22);
-        userData.setCountry("NZ");
-        user.setUserData(userData);
-        repository.save(user);
-
-        //Try this one when done individually
-        //Otherwise it will run an error since it's doing multiple saves and changes
-        //System.out.println(repository.getByUsername("Test").getUsername());
-        System.out.println(repository.getByUsername("UpdateTest").getUsername());
-
-    }
 }

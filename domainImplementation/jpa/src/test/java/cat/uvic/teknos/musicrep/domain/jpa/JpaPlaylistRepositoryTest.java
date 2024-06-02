@@ -73,7 +73,7 @@ class JpaPlaylistRepositoryTest {
     @Test
     void getPlaylist(){
         var repository = new JpaPlaylistRepository(entityManager);
-        System.out.println(repository.get(1).getPlaylistName());
+        System.out.println(repository.get(2).getPlaylistName());
 
     }
 
