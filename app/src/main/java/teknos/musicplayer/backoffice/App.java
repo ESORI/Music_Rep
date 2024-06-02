@@ -12,13 +12,18 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Properties;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
+
 
 import java.util.Scanner;
 
 public class App {
+
     public static void main(String[] args) throws IOException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+
         showBanner();
+        java.util.logging.Logger.getLogger("org.hibernate").setLevel(Level.OFF);
 
         var properties = new Properties();
         properties.load(App.class.getResourceAsStream("/app.properties"));

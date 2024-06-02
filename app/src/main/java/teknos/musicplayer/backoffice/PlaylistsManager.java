@@ -161,7 +161,7 @@ public class PlaylistsManager {
         int id =Integer.parseInt(readLine(in));
         playlist.setId(id);
 
-        int deleteSel = deleteOptions();
+        /*int deleteSel = deleteOptions();
 
         switch (deleteSel){
             case 2:
@@ -189,13 +189,14 @@ public class PlaylistsManager {
             default:
                 out.println("Invalid command");
                 break;
-        }
+        }*/
 
 
         playlistRepository.delete(playlist);
     }
 
     private int deleteOptions() {
+
         out.println("Do you want to...");
         out.println("1 Delete the whole playlist");
         out.println("2 Delete a song from the playlist");
