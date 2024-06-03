@@ -170,7 +170,7 @@ public class ArtistsManager {
             artistData.setLang(readLine(in));
             artist.setArtistData(artistData);
         }
-
+/*
         out.println("Do you want to update any Album? (yes/no)");
         if(readLine(in).equalsIgnoreCase("yes")){
             out.println("Please enter the album's id you wish to update\n0 if it's a new album (only works on jdbc for now)");
@@ -181,7 +181,13 @@ public class ArtistsManager {
                 insertAlbum(songs, albums, artist);
             }
         }
-
+        */
+        out.println("Do you want to update any Album? (yes/no)");
+        if(readLine(in).equalsIgnoreCase("yes")) {
+            out.println("Please enter the album's id you wish to update");
+            int albumId = Integer.parseInt(readLine(in));
+            updateAlbum(albumId, songs, albums, artist);
+        }
         artistRepository.save(artist);
     }
 
@@ -193,12 +199,13 @@ public class ArtistsManager {
         out.println("How many songs?");
         album.setNSongs(Integer.parseInt(readLine(in)));
         album.setArtist(artist);
-
+/*
         out.println("Do you want to update any song in the album? (yes/no)");
         if(readLine(in).equalsIgnoreCase("yes")){
             updateSong(songs, album, artist);
         }
-
+*/
+        updateSong(songs, album, artist);
         albums.add(album);
         artist.setAlbum(albums);
     }

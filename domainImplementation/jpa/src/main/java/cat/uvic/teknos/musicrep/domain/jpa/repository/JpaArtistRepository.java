@@ -29,6 +29,12 @@ public class JpaArtistRepository implements ArtistRepository {
             }else if(!entityManager.contains(model)){
                 //UPDATE ARTIST
                 var artist = entityManager.find(cat.uvic.teknos.musicrep.domain.jpa.models.Artist.class, model.getId());
+                if(model.getGroupName().isEmpty() || model.getGroupName()==null){
+                    model.setGroupName(artist.getGroupName());
+                }
+                if(model.getMonthlyList()<=0){
+                    model.setMonthlyList(artist.getMonthlyList());
+                }
                 if(model.getArtistData()==null){
                     var artistData = entityManager.find(cat.uvic.teknos.musicrep.domain.jpa.models.ArtistData.class, model.getId());
                     model.setArtistData(artistData);
