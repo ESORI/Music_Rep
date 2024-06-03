@@ -33,7 +33,6 @@ public class JpaArtistRepository implements ArtistRepository {
                     var artistData = entityManager.find(cat.uvic.teknos.musicrep.domain.jpa.models.ArtistData.class, model.getId());
                     model.setArtistData(artistData);
                 }
-
                 if(model.getAlbum().isEmpty()){
                     model.setAlbum(artist.getAlbum());
                 }else{
@@ -44,14 +43,11 @@ public class JpaArtistRepository implements ArtistRepository {
                         }
                     }
                 }
-
                 entityManager.merge(model);
-                System.out.println("Worked?");
             }
             entityManager.getTransaction().commit();
         }catch (Exception e){
             entityManager.getTransaction().rollback();
-            System.out.println("DIDN'T WORK");
         }
     }
 

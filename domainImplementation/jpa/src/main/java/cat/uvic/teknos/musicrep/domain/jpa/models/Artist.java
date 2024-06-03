@@ -23,11 +23,11 @@ public class Artist implements com.esori.list.models.Artist {
 
 
     @OneToMany(
-            //mappedBy = "artist",
+            mappedBy = "artist",
             cascade = CascadeType.ALL,
             orphanRemoval = true,
             targetEntity = cat.uvic.teknos.musicrep.domain.jpa.models.Album.class)
-    @JoinColumn(name = "ID_ARTIST")
+    //@JoinColumn(name = "ID_ARTIST")
     private Set<Album> album = new HashSet<>();
 
 

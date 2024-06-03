@@ -2,6 +2,9 @@ package cat.uvic.teknos.musicrep.domain.jpa.models;
 import com.esori.list.models.Artist;
 import com.esori.list.models.Song;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -19,12 +22,12 @@ public class Album implements com.esori.list.models.Album {
     private String albumName;
     @Column(name="QUANTITY_SONGS")
     private int nSongs;
-    @ManyToOne(targetEntity = cat.uvic.teknos.musicrep.domain.jpa.models.Artist.class, fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = cat.uvic.teknos.musicrep.domain.jpa.models.Artist.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "ID_ARTIST")
     private Artist artist;
 
-    @OneToMany(cascade = CascadeType.ALL,orphanRemoval = true,targetEntity = cat.uvic.teknos.musicrep.domain.jpa.models.Song.class)
-    @JoinColumn(name = "ID_ALBUM")
+    @OneToMany(mappedBy="album",cascade = CascadeType.ALL,orphanRemoval = true,targetEntity = cat.uvic.teknos.musicrep.domain.jpa.models.Song.class)
+    //@JoinColumn(name = "ID_ALBUM")
     private Set<Song> song = new HashSet<>();
 
 

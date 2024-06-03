@@ -31,7 +31,23 @@ public class JpaPlaylistRepository implements PlaylistRepository {
 
                 entityManager.persist(model);
             }else if(!entityManager.contains(model)){
+                var playlistOG = entityManager.find(cat.uvic.teknos.musicrep.domain.jpa.models.Playlist.class, model.getId());
                 //UPDATE PLAYLIST
+                if(model.getPlaylistName()==null || model.getPlaylistName().isEmpty()){
+                    model.setPlaylistName(playlistOG.getPlaylistName());
+                }
+                if(model.getDescription()==null || model.getDescription().isEmpty()){
+                    model.setDescription(model.getPlaylistName());
+                }
+                if(model.getDuration()<=0){
+                    model.setDuration(playlistOG.getDuration());
+                }
+                if(model.getNSongs()<=0){
+                    model.setNSongs(playlistOG.getNSongs());
+                }
+                model.setSong(playlistOG.getSong());
+                model.setUser(playlistOG.getUser());
+
                 entityManager.merge(model);
             }
             entityManager.getTransaction().commit();

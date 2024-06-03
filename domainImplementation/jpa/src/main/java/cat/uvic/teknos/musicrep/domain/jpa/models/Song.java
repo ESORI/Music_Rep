@@ -4,6 +4,8 @@ import com.esori.list.models.Album;
 import com.esori.list.models.Artist;
 import com.esori.list.models.Playlist;
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -20,9 +22,11 @@ public class Song implements com.esori.list.models.Song {
     @Column(name = "DURATION")
     private int duration;
     @ManyToOne(targetEntity = cat.uvic.teknos.musicrep.domain.jpa.models.Artist.class, fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "ID_ARTIST")
     private Artist artist;
     @ManyToOne(targetEntity = cat.uvic.teknos.musicrep.domain.jpa.models.Album.class, fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name="ID_ALBUM")
     private Album album;
 

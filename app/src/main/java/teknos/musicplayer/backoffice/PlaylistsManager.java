@@ -130,6 +130,7 @@ public class PlaylistsManager {
         playlist.setPlaylistName(readLine(in));
         out.println("New description:");
         playlist.setDescription(readLine(in));
+        /*
         out.println("New duration of playlist?");
         playlist.setDuration(Integer.parseInt(readLine(in)));
         out.println("Total songs in playlist?");
@@ -148,6 +149,8 @@ public class PlaylistsManager {
 
         playlist.setSong(songs);
         playlist.setUser(users);
+
+         */
 
         playlistRepository.save(playlist);
     }
@@ -221,6 +224,36 @@ public class PlaylistsManager {
         asciiTable.addRule();
 
         getTable(asciiTable);
+
+        var asciiTable2 = new AsciiTable();
+        asciiTable2.addRule();
+        asciiTable2.addRow("Playlist", "User");
+        asciiTable2.addRule();
+        if(playlist.getUser().isEmpty()){
+            asciiTable2.addRow(playlist.getPlaylistName(),"No Data");
+            asciiTable2.addRule();
+        }else{
+            for(var user : playlist.getUser()){
+                asciiTable2.addRow(playlist.getPlaylistName(),user.getUsername());
+                asciiTable2.addRule();
+            }
+        }
+        getTable(asciiTable2);
+
+        var asciiTable3 = new AsciiTable();
+        asciiTable3.addRule();
+        asciiTable3.addRow("Playlist", "Song");
+        asciiTable3.addRule();
+        if(playlist.getSong().isEmpty()){
+            asciiTable3.addRow(playlist.getPlaylistName(),"No Data");
+        }else{
+            for(var song : playlist.getSong()){
+                asciiTable3.addRow(playlist.getPlaylistName(),song.getSongName());
+                asciiTable3.addRule();
+            }
+        }
+        getTable(asciiTable3);
+
     }
 
     private void getAll(){
